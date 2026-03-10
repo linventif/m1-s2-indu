@@ -37,7 +37,7 @@ limitations under the License.
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
 <sonar.projectKey>m1-s2-indu</sonar.projectKey>
-<sonar.host.url>https://sonar.linv.dev</sonar.host.url>
+<sonar.host.url>https://sorar.linv.dev</sonar.host.url>
     </properties>
 
     <dependencies>
