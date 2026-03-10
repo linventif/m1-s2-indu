@@ -36,10 +36,8 @@ limitations under the License.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <sonar.organization>davidnavarreics</sonar.organization>
-        <sonar.projectKey>DavidNavarreICS_sharePortfolio</sonar.projectKey>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.java.libraries></sonar.java.libraries>
+<sonar.projectKey>m1-s2-indu</sonar.projectKey>
+<sonar.host.url>https://sonar.linv.dev</sonar.host.url>
     </properties>
 
     <dependencies>
@@ -99,7 +97,7 @@ limitations under the License.
             </plugin>
         </plugins>
     </build>
-    
+
     <reporting>
         <plugins>
             <plugin>
