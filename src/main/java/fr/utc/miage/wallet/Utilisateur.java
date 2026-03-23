@@ -5,9 +5,6 @@ import java.time.Period;
 import java.sql.Date;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class Utilisateur {
   private final String name;
   private final String firstName;
