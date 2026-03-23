@@ -8,12 +8,16 @@ import org.junit.jupiter.api.Test;
 
 import fr.utc.miage.wallet.Transaction.TypeTransaction;
 
-public class TransactionTest {
+class TransactionTest {
 
-  private final TypeTransaction CORRECT_TYPE = Transaction.TypeTransaction.BUY;
-  private final Action CORRECT_ACTION = new Action("APPLE", 100);
-  private final Double CORRECT_AMOUNT = 12.2;
-  private final Integer CORRECT_QUANTITY = 20;
+  private static final TypeTransaction CORRECT_TYPE = Transaction.TypeTransaction.BUY;
+  private static final Action CORRECT_ACTION = new Action("APPLE", 100);
+  private static final Double CORRECT_AMOUNT = 12.2;
+  private static final Integer CORRECT_QUANTITY = 20;
+
+  public static Transaction getCorrectTransaction(){
+    return new Transaction(CORRECT_TYPE, CORRECT_ACTION, CORRECT_AMOUNT, CORRECT_QUANTITY);
+  }
 
   @Test
   void testConstructorShouldWork() {
@@ -24,7 +28,7 @@ public class TransactionTest {
 
   @Test
   void testGetterShouldWork() {
-    Transaction transaction = new Transaction(CORRECT_TYPE, CORRECT_ACTION, CORRECT_AMOUNT, CORRECT_QUANTITY);
+    Transaction transaction = this.getCorrectTransaction();
     assertEquals(transaction.getType(), CORRECT_TYPE);
     assertEquals(transaction.getAction(), CORRECT_ACTION);
     assertEquals(transaction.getAmount(), CORRECT_AMOUNT);

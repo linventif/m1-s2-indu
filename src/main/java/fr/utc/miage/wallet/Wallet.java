@@ -2,25 +2,19 @@ package fr.utc.miage.wallet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class Wallet {
-
-  private String code;
   private ArrayList<Transaction> transactions;
   private Map<Action, Integer> listAction;
 
-  public Wallet(final String code) {
-    this.code = code;
-    this.transactions = new ArrayList<Transaction>();
-    this.listAction = new HashMap<Action, Integer>();
+  public Wallet() {
+    this.transactions = new ArrayList<>();
+    this.listAction = new HashMap<>();
   }
 
-  public String getCode() {
-    return this.code;
-  }
-
-  public ArrayList<Transaction> getTransactions() {
+  public List<Transaction> getTransactions() {
     return this.transactions;
   }
 
@@ -40,7 +34,7 @@ class Wallet {
 
   @Override
   public String toString() {
-    return "Wallet [getCode()=" + getCode() + ", getTransactions()=" + getTransactions() + ", getListAction()="
+    return "Wallet [getTransactions()=" + getTransactions() + ", getListAction()="
         + getListAction() + "]";
   }
 
