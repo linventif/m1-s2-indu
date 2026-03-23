@@ -3,13 +3,13 @@ package fr.utc.miage.wallet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-class WallerTest {
+class WalletTest {
   @Test
   void testAddAction() {
     Wallet wallet = new Wallet();
     Action action1 = new Action("Action 1", 10.0);
     wallet.addAction(action1, 5);
-    assertEquals(5, wallet.getListAction().get(action1));
+    assertEquals(5, wallet.getActions().get(action1));
   }
 
   @Test
