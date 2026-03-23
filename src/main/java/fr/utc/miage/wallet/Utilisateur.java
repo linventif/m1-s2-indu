@@ -10,9 +10,9 @@ public class Utilisateur {
   private final String firstName;
   private final Date birthday;
   private Wallet wallet;
-  private List<Action> actionList;
+  private Double cashAmout = 200.00;
 
-  public Utilisateur(String name, String firstName, Date birthday, Wallet wallet, List<Action> actionList) {
+  public Utilisateur(String name, String firstName, Date birthday) {
     this.name = name;
     this.firstName = firstName;
 
@@ -24,8 +24,7 @@ public class Utilisateur {
     }
 
     this.birthday = birthday;
-    this.wallet = wallet;
-    this.actionList = actionList;
+    this.wallet = new Wallet();
   }
 
   public String getName() {
@@ -37,7 +36,11 @@ public class Utilisateur {
   }
 
   public Date getBirthday() {
-    return this.birthday;
+    return birthday;
+  }
+
+  public Date getBirthday() {
+    return birthday;
   }
 
   public Wallet getWallet() {
@@ -45,7 +48,19 @@ public class Utilisateur {
   }
 
   public List<Action> getActionList() {
-    return this.actionList;
+    return actionList;
+  }
+
+  public void setWallet(Wallet wallet) {
+    this.wallet = wallet;
+  }
+
+  public Wallet getWallet() {
+    return wallet;
+  }
+
+  public List<Action> getActionList() {
+    return actionList;
   }
 
   public void setWallet(Wallet wallet) {
