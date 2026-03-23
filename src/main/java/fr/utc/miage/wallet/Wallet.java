@@ -21,6 +21,14 @@ class Wallet {
     listAction.put(action, listAction.getOrDefault(action, 0) + quantity);
   }
 
+  public double getTotalValue() {
+    double total = 0.0;
+    for (Map.Entry<Action, Integer> entry : listAction.entrySet()) {
+      total += entry.getKey().getPrice() * entry.getValue();
+    }
+    return total;
+  }
+
   @Override
   public String toString() {
     return "Wallet{" +
