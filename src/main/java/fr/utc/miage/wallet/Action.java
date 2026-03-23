@@ -5,7 +5,11 @@ public class Action {
   private double price;
 
   public Action(String label, double price) {
-    // add verif
+    if (label == null || label.isEmpty()) {
+      throw new IllegalArgumentException("Label cannot be null or empty");
+    } else if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative");
+    }
     this.label = label;
     this.price = price;
   }
@@ -19,6 +23,9 @@ public class Action {
   }
 
   public void setPrice(double price) {
+    if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative");
+    }
     this.price = price;
   }
 
