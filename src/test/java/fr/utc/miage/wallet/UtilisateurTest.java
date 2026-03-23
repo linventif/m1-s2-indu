@@ -68,14 +68,16 @@ public class UtilisateurTest {
 
   @Test
     void testConstructorWithValidParametresShouldWork(){
-        assertDoesNotThrow(()->{new Utilisateur(FIRST_NAME, NAME, BIRTHDAY, null, ACTION_LIST)});   
+        assertDoesNotThrow(()->{new Utilisateur(FIRST_NAME, NAME, BIRTHDAY, null, ACTION_LIST);
+                               });   
 
     }
 
   @Test
     void testConstructorWithInvalidParametresShouldThrowException(){
         Date invalidBirthday = Date.valueOf("2010-01-01");
-        assertThrows(IllegalArgumentException.class, ()->{new Utilisateur(FIRST_NAME, NAME, invalidBirthday, null, ACTION_LIST)});  
+        assertThrows(IllegalArgumentException.class, ()->{new Utilisateur(FIRST_NAME, NAME, invalidBirthday, null, ACTION_LIST);
+                                                         });  
 
     }
 }
