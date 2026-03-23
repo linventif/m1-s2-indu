@@ -2,9 +2,14 @@ package fr.utc.miage.wallet;
 
 public class Action {
   private String label;
-  private int price;
+  private double price;
 
-  public Action(String label, int price) {
+  public Action(String label, double price) {
+    if (label == null || label.isEmpty()) {
+      throw new IllegalArgumentException("Label cannot be null or empty");
+    } else if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative");
+    }
     this.label = label;
     this.price = price;
   }
@@ -13,16 +18,23 @@ public class Action {
     return label;
   }
 
-  public int getPrice() {
+  public double getPrice() {
     return price;
   }
 
-  public void setPrice(int price) {
+  public void setPrice(double price) {
+    if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative");
+    }
     this.price = price;
   }
 
   public String toString() {
     return "Action: " + label + " (" + price + "€)";
+  }
+
+  public void delete() {
+    this.delete();
   }
 
   @Override
@@ -33,14 +45,14 @@ public class Action {
       return false;
     } else {
       Action other = (Action) obj;
-      return label.equals(other.label) && price == other.price;
+      return label.equals(other.label) && Double.compare(price, other.price) == 0;
     }
   }
 
   @Override
   public int hashCode() {
     int result = label.hashCode();
-    result = 31 * result + price;
+    result = 31 * result + Double.hashCode(price);
     return result;
   }
 }
