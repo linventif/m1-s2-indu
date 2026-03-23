@@ -1,8 +1,8 @@
 package fr.utc.miage.wallet;
-
+import java.time.LocalDate;
+import java.time.Period;
 import java.sql.Date;
 import java.util.List;
-import java.util.LocaleDate;
 
 public class Utilisateur {
     private final String name;
@@ -15,7 +15,10 @@ public class Utilisateur {
         this.name = name;
         this.firstName = firstName;
         
-        if((today.getYear() - birthday.getYear())<18){
+        LocalDate birthLocal = birthday.toLocalDate();
+        int age = Period.between(birthLocal, LocalDate.now()).getYears();
+        
+        if(age < 18){
             throw new IllegalArgumentException("L'utilisateur doit avoir au moins 18 ans.");
         }
         
