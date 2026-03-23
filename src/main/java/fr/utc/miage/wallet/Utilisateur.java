@@ -28,22 +28,6 @@ public class Utilisateur {
     this.actionList = actionList;
   }
 
-  public Utilisateur(String name, String firstName, Date birthday, Wallet wallet, List<Action> actionList) {
-    this.name = name;
-    this.firstName = firstName;
-
-    LocalDate birthLocal = birthday.toLocalDate();
-    int age = Period.between(birthLocal, LocalDate.now()).getYears();
-
-    if (age < 18) {
-      throw new IllegalArgumentException("L'utilisateur doit avoir au moins 18 ans.");
-    }
-
-    this.birthday = birthday;
-    this.wallet = wallet;
-    this.actionList = actionList;
-  }
-
   public String getName() {
     return name;
   }
@@ -54,22 +38,6 @@ public class Utilisateur {
 
   public Date getBirthday() {
     return birthday;
-  }
-
-  public Date getBirthday() {
-    return birthday;
-  }
-
-  public Wallet getWallet() {
-    return wallet;
-  }
-
-  public List<Action> getActionList() {
-    return actionList;
-  }
-
-  public void setWallet(Wallet wallet) {
-    this.wallet = wallet;
   }
 
   public Wallet getWallet() {

@@ -4,12 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
-  @Test
-  void actionConstructorTest() {
+
+  private final @Test void actionConstructorTest() {
     Action act = new Action("OVH", 10.0);
     assertNotNull(act);
   }

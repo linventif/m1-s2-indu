@@ -10,6 +10,8 @@ class Wallet {
   private ArrayList<Transaction> transactions;
   private Map<Action, Integer> listAction;
 
+  public Wallet() {}
+
   public Wallet(final String code) {
     this.code = code;
     this.transactions = new ArrayList<Transaction>();

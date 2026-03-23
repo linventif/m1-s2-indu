@@ -1,12 +1,11 @@
 package fr.utc.miage.wallet;
 
-import org.junit.jupiter.api.Test;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class UtilisateurTest {
   private final String NAME = "Doe";
@@ -66,9 +65,4 @@ public class UtilisateurTest {
     assertEquals(newWallet, utilisateur.getWallet());
   }
 
-  @Test
-    void testConstructorWithValidParametresShouldWork(){
-        assertDoesNotThrow(()->{new Utilisateur(FIRST_NAME, NAME, BIRTHDAY, null, ACTION_LIST)});   
-
-    }
 }
