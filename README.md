@@ -14,3 +14,9 @@
 - [Arij Hadda](https://github.com/ArijHadda)
 - [Andri Didenko](https://github.com/Andrii4A)
 - [Robbe Leushuis](https://github.com/Leushuis)
+
+## Check list
+
+- JAVA doc
+- License
+- ...
