@@ -15,6 +15,16 @@ class ActionTest {
   }
 
   @Test
+  void actionConstructorDuplicateLabelTest() {
+    Action act1 = new Action("OVH", 10.0);
+    try {
+      new Action("OVH", 15.0);
+    } catch (IllegalArgumentException e) {
+      assertEquals("Action with this label already exists", e.getMessage());
+    }
+  }
+
+  @Test
   void actionConstructorInvalidLabelTest() {
     try {
       new Action(null, 10.0);
@@ -61,7 +71,8 @@ class ActionTest {
   void actionDeleteTest() {
     Action act = new Action("OVH", 10);
     act.delete();
-    assertNull(act);
+    Action act2 = Action.getActionByLabel("OVH");
+    assertNull(act2);
   }
 
   @Test

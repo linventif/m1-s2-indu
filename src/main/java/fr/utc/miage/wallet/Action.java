@@ -1,8 +1,11 @@
 package fr.utc.miage.wallet;
 
+import java.util.HashMap;
+
 public class Action {
   private String label;
   private double price;
+  private static HashMap<String, Action> actions = new HashMap<>();
 
   public Action(String label, double price) {
     if (label == null || label.isEmpty()) {
@@ -12,6 +15,11 @@ public class Action {
     }
     this.label = label;
     this.price = price;
+    actions.put(label, this);
+  }
+
+  public static Action getActionByLabel(String label) {
+    return actions.get(label);
   }
 
   public String getLabel() {
@@ -34,7 +42,7 @@ public class Action {
   }
 
   public void delete() {
-    this.delete();
+    actions.remove(label);
   }
 
   @Override
