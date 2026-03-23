@@ -1,14 +1,15 @@
 {
-  "editor.detectIndentation": false,
-  "editor.formatOnSave": true,
-  "editor.insertSpaces": true,
-  "editor.tabSize": 2,
-  "[java]": {
-    "editor.defaultFormatter": "redhat.java"
-  },
-  "java.configuration.updateBuildConfiguration": "interactive",
-  "sonarlint.connectedMode.project": {
-    "connectionId": "https-sorar-linv-dev",
-    "projectKey": "linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK"
-  }
+	"editor.detectIndentation": false,
+	"editor.formatOnSave": true,
+	"editor.insertSpaces": true,
+	"editor.tabSize": 2,
+	"[java]": {
+		"editor.defaultFormatter": "redhat.java"
+	},
+	"java.configuration.updateBuildConfiguration": "interactive",
+	"sonarlint.connectedMode.project": {
+		"connectionId": "https-sorar-linv-dev",
+		"projectKey": "linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK"
+	},
+	"java.debug.settings.onBuildFailureProceed": true
 }
