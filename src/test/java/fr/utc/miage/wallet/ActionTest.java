@@ -14,6 +14,29 @@ class ActionTest {
   }
 
   @Test
+  void actionConstructorInvalidLabelTest() {
+    try {
+      new Action(null, 10.0);
+    } catch (IllegalArgumentException e) {
+      assertEquals("Label cannot be null or empty", e.getMessage());
+    }
+    try {
+      new Action("", 10.0);
+    } catch (IllegalArgumentException e) {
+      assertEquals("Label cannot be null or empty", e.getMessage());
+    }
+  }
+
+  @Test
+  void actionConstructorInvalidPriceTest() {
+    try {
+      new Action("OVH", -10.0);
+    } catch (IllegalArgumentException e) {
+      assertEquals("Price cannot be negative", e.getMessage());
+    }
+  }
+
+  @Test
   void actionGettersTest() {
     Action act = new Action("OVH", 10.0);
     assertEquals("OVH", act.getLabel());
