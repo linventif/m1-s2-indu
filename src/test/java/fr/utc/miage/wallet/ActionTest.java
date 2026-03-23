@@ -3,6 +3,7 @@ package fr.utc.miage.wallet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +32,13 @@ class ActionTest {
   void actionToStringTest() {
     Action act = new Action("OVH", 10);
     assertEquals("Action: OVH (10€)", act.toString());
+  }
+
+  @Test
+  void actionDeleteTest() {
+    Action act = new Action("OVH", 10);
+    act.delete();
+    assertNull(act);
   }
 
   @Test

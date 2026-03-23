@@ -25,6 +25,10 @@ public class Action {
     return "Action: " + label + " (" + price + "€)";
   }
 
+  public void delete() {
+    this.delete();
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
