@@ -10,19 +10,26 @@ import org.junit.jupiter.api.Test;
 class ActionTest {
   @Test
   void actionConstructorTest() {
-    Action act = new Action("OVH", 10.0);
+    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
     assertNotNull(act);
+  }
+
+  @Test
+  void actionConstructorWithCategoryTest() {
+    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
+    assertNotNull(act);
+    assertEquals("INDUSTRIAL", act.getCategory());
   }
 
   @Test
   void actionConstructorInvalidLabelTest() {
     try {
-      new Action(null, 10.0);
+      new Action(null, 10.0, ActionCategory.OTHER);
     } catch (IllegalArgumentException e) {
       assertEquals("Label cannot be null or empty", e.getMessage());
     }
     try {
-      new Action("", 10.0);
+      new Action("", 10.0, ActionCategory.OTHER);
     } catch (IllegalArgumentException e) {
       assertEquals("Label cannot be null or empty", e.getMessage());
     }
@@ -31,7 +38,7 @@ class ActionTest {
   @Test
   void actionConstructorInvalidPriceTest() {
     try {
-      new Action("OVH", -10.0);
+      new Action("OVH", -10.0, ActionCategory.INDUSTRIAL);
     } catch (IllegalArgumentException e) {
       assertEquals("Price cannot be negative", e.getMessage());
     }
@@ -39,36 +46,38 @@ class ActionTest {
 
   @Test
   void actionGettersTest() {
-    Action act = new Action("OVH", 10.0);
+    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
     assertEquals("OVH", act.getLabel());
     assertEquals(10.0, act.getPrice());
+    assertEquals("INDUSTRIAL", act.getCategory());
   }
 
   @Test
   void actionSetPriceTest() {
-    Action act = new Action("OVH", 10.0);
+    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
     act.setPrice(15.0);
     assertEquals(15.0, act.getPrice());
   }
 
   @Test
   void actionToStringTest() {
-    Action act = new Action("OVH", 10.0);
-    assertEquals("Action: OVH (10.0€)", act.toString());
+    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
+    assertEquals("Action: OVH (10.0€), Category: INDUSTRIAL", act.toString());
   }
 
   @Test
   void actionDeleteTest() {
-    Action act = new Action("OVH", 10);
+    Action act = new Action("OVH", 10, ActionCategory.INDUSTRIAL);
     act.delete();
-    assertNull(act);
+    Action act2 = Action.getActionByLabel("OVH");
+    assertNull(act2);
   }
 
   @Test
   void actionEqualsTest() {
-    Action act1 = new Action("OVH", 10.0);
-    Action act2 = new Action("OVH", 10.0);
-    Action act3 = new Action("Google", 15.0);
+    Action act1 = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
+    Action act2 = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
+    Action act3 = new Action("Google", 15.0, ActionCategory.INDUSTRIAL);
     assertNotEquals(act2, act3);
     assertNotEquals(act1, act3);
     assertEquals(act1, act2);
@@ -79,8 +88,8 @@ class ActionTest {
   // hascode test
   @Test
   void actionHashCodeTest() {
-    Action act1 = new Action("OVH", 10.0);
-    Action act2 = new Action("OVH", 10.0);
+    Action act1 = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
+    Action act2 = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
     assertEquals(act1.hashCode(), act2.hashCode());
   }
 }
