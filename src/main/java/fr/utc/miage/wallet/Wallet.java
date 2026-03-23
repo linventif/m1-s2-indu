@@ -31,8 +31,6 @@ class Wallet {
 
   @Override
   public String toString() {
-    return "Wallet{" +
-        "listAction=" + listAction +
-        '}';
+    return "Wallet actions: " + listAction.toString();
   }
 }
