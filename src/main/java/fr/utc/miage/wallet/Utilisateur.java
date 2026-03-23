@@ -1,12 +1,8 @@
 package fr.utc.miage.wallet;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
-import java.sql.Date;
-import java.util.List;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Utilisateur {
@@ -40,7 +36,7 @@ public class Utilisateur {
     return firstName;
   }
 
-  public String getBirthday() {
+  public Date getBirthday() {
     return birthday;
   }
 
