@@ -2,27 +2,20 @@ package fr.utc.miage.wallet;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 class Wallet {
-  private HashMap<Action, Integer> actions;
+  private final Map<Action, Integer> actions;
 
-  private String code;
-  private ArrayList<Transaction> transactions;
-  private Map<Action, Integer> listAction;
-
-  public Wallet() {}
-
-  public Wallet(final String code) {
-    this.code = code;
-    this.transactions = new ArrayList<Transaction>();
-    this.listAction = new HashMap<Action, Integer>();
+  public Wallet() {
+    this.actions = new HashMap<>();
   }
 
   public Map<Action, Integer> getActions() {
     return this.actions;
   }
 
-  public void addAction(Action action, int quantity) {
+  public void addAction(final Action action, final int quantity) {
     if (quantity < 0) {
       throw new IllegalArgumentException("Quantity cannot be negative");
     }
@@ -39,6 +32,22 @@ class Wallet {
 
   @Override
   public String toString() {
-    return "Wallet actions: " + actions.toString();
+    return "Wallet actions: " + actions;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof Wallet other)) {
+      return false;
+    }
+    return Objects.equals(actions, other.actions);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(actions);
   }
 }

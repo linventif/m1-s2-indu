@@ -1,5 +1,8 @@
 # m1-s2-indu
 
+[![CI](https://github.com/linventif/m1-s2-indu/actions/workflows/build.yml/badge.svg)](https://github.com/linventif/m1-s2-indu/actions/workflows/build.yml)
+![Coverage](.github/badges/jacoco.svg)
+
 ## Links
 
 - [SonarQube](https://sorar.linv.dev) (user: `indu`, password: `le nom du prof`)

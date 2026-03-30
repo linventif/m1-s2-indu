@@ -1,6 +1,8 @@
 package fr.utc.miage.wallet;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Action {
 
@@ -9,37 +11,53 @@ public class Action {
     COMPOSEE
   }
 
-  private String label;
+  private static final Map<String, Action> ACTIONS = new HashMap<>();
+
+  private final String label;
   private double price;
-  private TypeAction type;
+  private final TypeAction type;
+  private ActionCategory category;
   private Map<String, Float> composition;
 
   public Action(final String label, final Double price) {
-    if (label == null || label.isEmpty()) {
-      throw new IllegalArgumentException("Label cannot be null or empty");
-    } else if (price < 0) {
-      throw new IllegalArgumentException("Price cannot be negative");
-    }
+    this(label, price, ActionCategory.OTHER);
+  }
+
+  public Action(final String label, final Double price, final ActionCategory category) {
+    validate(label, price);
     this.label = label;
     this.price = price;
     this.type = TypeAction.SIMPLE;
+    this.category = category;
     this.composition = null;
+    ACTIONS.put(label, this);
   }
 
   public Action(final String label, final Double price, final Map<String, Float> composition) {
-    if (label == null || label.isEmpty()) {
-      throw new IllegalArgumentException("Label cannot be null or empty");
-    } else if (price < 0) {
-      throw new IllegalArgumentException("Price cannot be negative");
-    }
+    validate(label, price);
     this.label = label;
     this.price = price;
     this.type = TypeAction.COMPOSEE;
+    this.category = ActionCategory.OTHER;
     this.composition = composition;
+    ACTIONS.put(label, this);
   }
 
-  public Action(String label2, int price2) {
-    // TODO Auto-generated constructor stub
+  public Action(final String label, final int price) {
+    this(label, Double.valueOf(price));
+  }
+
+  private static void validate(final String label, final Double price) {
+    if (label == null || label.isEmpty()) {
+      throw new IllegalArgumentException("Label cannot be null or empty");
+    }
+    if (price == null || price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative");
+    }
+  }
+
+  public static Action getActionByLabel(final String label) {
+    return ACTIONS.get(label);
   }
 
   public String getLabel() {
@@ -50,7 +68,7 @@ public class Action {
     return category.toString();
   }
 
-  public void setCategory(ActionCategory category) {
+  public void setCategory(final ActionCategory category) {
     this.category = category;
   }
 
@@ -58,7 +76,7 @@ public class Action {
     return price;
   }
 
-  public void setPrice(double price) {
+  public void setPrice(final double price) {
     if (price < 0) {
       throw new IllegalArgumentException("Price cannot be negative");
     }
@@ -69,22 +87,19 @@ public class Action {
     return type;
   }
 
-  public void setType(TypeAction type) {
-    this.type = type;
-  }
-
   public Map<String, Float> getComposition() {
     return composition;
   }
 
-  public void setComposition(Map<String, Float> composition) {
+  public void setComposition(final Map<String, Float> composition) {
     this.composition = composition;
   }
 
   public void delete() {
-    actions.remove(label);
+    ACTIONS.remove(label);
   }
 
+  @Override
   public String toString() {
     return "Action: " + label + " (" + price + "€)";
   }
@@ -95,41 +110,21 @@ public class Action {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((label == null) ? 0 : label.hashCode());
-    long temp;
-    temp = Double.doubleToLongBits(price);
-    result = prime * result + (int) (temp ^ (temp >>> 32));
-    result = prime * result + ((type == null) ? 0 : type.hashCode());
-    result = prime * result + ((composition == null) ? 0 : composition.hashCode());
-    return result;
+    return Objects.hash(label, price, type, category, composition);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
+  public boolean equals(final Object obj) {
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (!(obj instanceof Action other)) {
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Action other = (Action) obj;
-    if (label == null) {
-      if (other.label != null)
-        return false;
-    } else if (!label.equals(other.label))
-      return false;
-    if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
-      return false;
-    if (type != other.type)
-      return false;
-    if (composition == null) {
-      if (other.composition != null)
-        return false;
-    } else if (!composition.equals(other.composition))
-      return false;
-    return true;
+    }
+    return Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
+        && Objects.equals(label, other.label)
+        && type == other.type
+        && category == other.category
+        && Objects.equals(composition, other.composition);
   }
-
 }
