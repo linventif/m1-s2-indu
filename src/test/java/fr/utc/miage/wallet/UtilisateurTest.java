@@ -8,10 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 class UtilisateurTest {
-  private static final String NAME = "Doe";
-  private static final String FIRST_NAME = "John";
-  private static final int CORRECT_QUANTITY = 3;
-  private static final Date BIRTHDAY = Date.valueOf("2000-01-01");
+  private final String NAME = "Doe";
+  private final String FIRST_NAME = "John";
+  private final Integer CORRECT_QUANTITY = 3;
+  private final Date BIRTHDAY = Date.valueOf("2000-01-01");
+  private final Wallet WALLET = new Wallet();
 
   public Utilisateur getCorrectUtilisateur() {
     return new Utilisateur(FIRST_NAME, NAME, BIRTHDAY);
@@ -77,6 +78,9 @@ class UtilisateurTest {
     assertDoesNotThrow(() -> {
       utilisateur.buyAction(action, CORRECT_QUANTITY);
     });
+  }
+
+  @Test
   void testGetCashAmount() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Double result = utilisateur.getCashAmount();
