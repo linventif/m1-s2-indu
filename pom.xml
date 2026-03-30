@@ -38,6 +38,7 @@ limitations under the License.
         <maven.compiler.target>21</maven.compiler.target>
 <sonar.projectKey>linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK</sonar.projectKey>
 <sonar.host.url>https://sorar.linv.dev</sonar.host.url>
+        <sonar.coverage.exclusions>src/main/java/fr/utc/miage/wallet/Demo.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
