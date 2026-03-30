@@ -1,8 +1,6 @@
 package fr.utc.miage.wallet;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -12,7 +10,6 @@ class UtilisateurTest {
   private final String FIRST_NAME = "John";
   private final Date BIRTHDAY = Date.valueOf("2000-01-01");
   private final Wallet WALLET = new Wallet();
-  private final List<Action> ACTION_LIST = new ArrayList<>();
 
   public Utilisateur getCorrectUtilisateur(){
     return new Utilisateur(FIRST_NAME, NAME, BIRTHDAY);
