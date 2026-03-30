@@ -7,7 +7,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-public class UtilisateurTest {
+class UtilisateurTest {
   private final String NAME = "Doe";
   private final String FIRST_NAME = "John";
   private final Date BIRTHDAY = Date.valueOf("2000-01-01");

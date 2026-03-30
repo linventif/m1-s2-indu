@@ -1,8 +1,7 @@
 package fr.utc.miage.wallet;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utilisateur {
@@ -10,7 +9,16 @@ public class Utilisateur {
   private final String firstName;
   private final Date birthday;
   private Wallet wallet;
+  private List<Action> actionList;
   private Double cashAmout = 200.00;
+
+  public Utilisateur(final String firstName, final String name, final Date birthday) {
+    this.firstName = firstName;
+    this.name = name;
+    this.birthday = birthday;
+    this.wallet = new Wallet();
+    this.actionList = new ArrayList<>();
+  }
 
   public String getName() {
     return this.name;
@@ -32,12 +40,15 @@ public class Utilisateur {
     return actionList;
   }
 
-  public void setWallet(Wallet wallet) {
+  public Double getCashAmout() {
+    return cashAmout;
+  }
+
+  public void setWallet(final Wallet wallet) {
     this.wallet = wallet;
   }
 
-  public void setActionList(List<Action> actionList) {
+  public void setActionList(final List<Action> actionList) {
     this.actionList = actionList;
   }
-
 }
