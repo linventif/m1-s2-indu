@@ -270,34 +270,34 @@ class UtilisateurTest {
   }
 
   @Test
-  void testGetHistoriqueMouvementWithAddCashAmoutShouldWork(){
+  void testGetHistoriqueMouvementWithAddCashAmoutShouldWork() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Double amountToAdd = 100.00;
     utilisateur.addCashAmount(amountToAdd);
     List<String> li = utilisateur.getHistoriqueMouvementSold();
     String ch = li.get(0);
-  assertEquals(ch,"Ajout d'argent:" + amountToAdd +" Current sold :" + utilisateur.getCashAmount() );
+    assertEquals(ch, "Ajout d'argent:" + amountToAdd + " Current sold :" + utilisateur.getCashAmount());
   }
 
   @Test
-  void testGetHistoriqueMouvementWithBuyActionShouldWork(){
+  void testGetHistoriqueMouvementWithBuyActionShouldWork() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Action action = ActionTest.getCorrectAction();
     utilisateur.buyAction(action, CORRECT_QUANTITY);
     List<String> li = utilisateur.getHistoriqueMouvementSold();
     String ch = li.get(0);
-    assertEquals(ch,"Action acheté :" + action.toString() +" Current sold :"+ utilisateur.getCashAmount());
+    assertEquals(ch, "Action acheté :" + action.toString() + " Current sold :" + utilisateur.getCashAmount());
   }
 
   @Test
-  void testGetHistoriqueMouvementWithSellActionShouldWork(){
+  void testGetHistoriqueMouvementWithSellActionShouldWork() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Action action = ActionTest.getCorrectAction();
     utilisateur.buyAction(action, CORRECT_QUANTITY);
     utilisateur.sellAction(action, CORRECT_QUANTITY);
     List<String> li = utilisateur.getHistoriqueMouvementSold();
     String ch = li.get(1);
-    assertEquals(ch,"Action sold :" + action.toString() +" Current sold :"+ utilisateur.getCashAmount());
+    assertEquals(ch, "Action sold :" + action.toString() + " Current sold :" + utilisateur.getCashAmount());
   }
 
 }
