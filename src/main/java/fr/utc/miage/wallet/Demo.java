@@ -22,13 +22,24 @@ public final class Demo {
    * @param args arguments de ligne de commande non utilisés
    */
   public static void main(final String[] args) {
+
     Action actionOvh = new Action("OVH Demo", 10.0, ActionCategory.INDUSTRIAL);
+    actionOvh.addHistoricalPrice(Date.valueOf("2026-01-01"), 50);
+    actionOvh.addHistoricalPrice(Date.valueOf("2026-01-02"), 20);
+    actionOvh.addHistoricalPrice(Date.valueOf("2026-01-03"), 70);
+
     Action actionGoogle = new Action("Google Demo", 20.0, ActionCategory.OTHER);
+    actionGoogle.addHistoricalPrice(Date.valueOf("2026-01-01"), 60);
+    actionGoogle.addHistoricalPrice(Date.valueOf("2026-01-02"), 80);
+    actionGoogle.addHistoricalPrice(Date.valueOf("2026-01-03"), 70);
 
     Map<String, Float> composition = new HashMap<>();
     composition.put(actionOvh.getLabel(), 0.4f);
     composition.put(actionGoogle.getLabel(), 0.6f);
     Action actionTechFund = new Action("Tech Fund Demo", 17.0, composition);
+    actionTechFund.addHistoricalPrice(Date.valueOf("2026-01-01"), 80);
+    actionTechFund.addHistoricalPrice(Date.valueOf("2026-01-02"), 100);
+    actionTechFund.addHistoricalPrice(Date.valueOf("2026-01-03"), 120);
 
     Utilisateur utilisateur = new Utilisateur("John", "Doe", Date.valueOf("2000-01-01"));
 
@@ -40,6 +51,13 @@ public final class Demo {
     System.out.println(" - " + actionOvh);
     System.out.println(" - " + actionGoogle);
     System.out.println(" - " + actionTechFund.toStringC());
+    System.out.println("Actions Analyse:");
+    System.out.println(" - " + actionOvh.getHistoricalPricesString());
+    actionOvh.getActionAnalyse();
+    System.out.println(" - " + actionGoogle);
+    actionGoogle.getActionAnalyse();
+    System.out.println(" - " + actionTechFund.toStringC());
+    actionTechFund.getActionAnalyse();
     System.out.println();
     System.out.println("[Etat initial]");
     System.out.println("Utilisateur: " + utilisateur.getFirstName() + " " + utilisateur.getName());

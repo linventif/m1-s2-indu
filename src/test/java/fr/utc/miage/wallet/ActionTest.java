@@ -1,6 +1,8 @@
 package fr.utc.miage.wallet;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -9,11 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.sql.Date;
-import java.util.HashMap;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
@@ -101,7 +99,8 @@ class ActionTest {
 
     assertEquals(ActionCategory.FOOD, act.getCategory());
     assertEquals(composition, act.getComposition());
-    assertEquals("Action: Action With Composition (" + CORRECT_PRICE + "€) Composition " + composition, act.toStringC());
+    assertEquals("Action: Action With Composition (" + CORRECT_PRICE + "€) Composition " + composition,
+        act.toStringC());
   }
 
   @Test
@@ -239,7 +238,8 @@ class ActionTest {
   }
 
   /**
-   * addHistoricalPrices should throw an exception if the price is negative or if the date is null.
+   * addHistoricalPrices should throw an exception if the price is negative or if
+   * the date is null.
    */
   @Test
   void addHistoricalPricesInvalidInputTest() {
@@ -265,8 +265,9 @@ class ActionTest {
   }
 
   /**
-    * Test the retrieval of price at a specific date, with and without historical prices.
-    */
+   * Test the retrieval of price at a specific date, with and without historical
+   * prices.
+   */
   @Test
   void getPriceAtDateTest() {
     Action act = new Action("Historical Price Action", CORRECT_PRICE);
@@ -310,7 +311,6 @@ class ActionTest {
     assertEquals(expected, act.getHistoricalPricesString());
   }
 
-
   @Test
   void getHistoricalPricesStringSingleEntryTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -321,7 +321,6 @@ class ActionTest {
     assertTrue(result.contains("Historical Prices:"));
     assertTrue(result.contains(date.toString() + ": 123.45€"));
   }
-
 
   @Test
   void getHistoricalPricesStringMultipleEntriesTest() {
@@ -336,9 +335,40 @@ class ActionTest {
     assertTrue(result.startsWith("Action: " + CORRECT_LABEL));
   }
 
+  @Test
+  void testGetHistoricalPriceDateNullShouldNotWork() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    assertThrows(IllegalArgumentException.class,
+        () -> {
+          act.getHistoricalPrice(null);
+        });
+  }
+
+  @Test
+  void testGetHistoricalPriceDateShouldWork() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    assertDoesNotThrow(
+        () -> {
+          act.getHistoricalPrice(Date.valueOf("2023-01-01"));
+        });
+    assertEquals(act.getHistoricalPrice(Date.valueOf("2023-01-01")), 100.0);
+  }
+
+  @Test
+  void testGetActionAnalyse() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    act.addHistoricalPrice(Date.valueOf("2023-01-02"), 200.0);
+    assertDoesNotThrow(() -> {
+      act.getActionAnalyse();
+    });
+  }
+
   /**
-    * Test the csv import of historical prices.
-    */
+   * Test the csv import of historical prices.
+   */
   @Test
   void testImportValidCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -350,8 +380,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices.
-    */
+   * Test the csv import of historical prices.
+   */
   @Test
   void testImportMalformedCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -362,8 +392,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices with a non-existent file.
-    */
+   * Test the csv import of historical prices with a non-existent file.
+   */
   @Test
   void testImportEmptyCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -372,8 +402,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices with a non-existent file.
-    */
+   * Test the csv import of historical prices with a non-existent file.
+   */
   @Test
   void testImportInvalidHeaderCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -381,8 +411,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices with a non-existent file.
-    */
+   * Test the csv import of historical prices with a non-existent file.
+   */
   @Test
   void testImportNonExistentFile() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);

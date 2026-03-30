@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -152,6 +154,57 @@ public class Action {
    */
   public double getPrice() {
     return price;
+  }
+
+  public void getActionAnalyse() {
+    // Trier par date pour une analyse plus lisible
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    final String SEPARATEUR = "+------------+---------+------------+";
+
+    System.out.println(SEPARATEUR);
+    System.out.println("| Date       | Valeur  | Evolution  |");
+    System.out.println(SEPARATEUR);
+
+    Double previousValue = null;
+
+    for (Map.Entry<Date, Double> entry : this.historicalPrices.entrySet()) {
+      Double currentValue = entry.getValue();
+
+      String evolution;
+      if (previousValue == null) {
+        evolution = "N/A";
+      } else {
+        double percentChange = ((currentValue - previousValue) / previousValue) * 100;
+        evolution = String.format("%.2f%%", percentChange);
+      }
+
+      System.out.printf("| %-10s | %-7.2f | %-10s |\n",
+          sdf.format(entry.getKey()),
+          currentValue,
+          evolution);
+
+      previousValue = currentValue;
+    }
+
+    System.out.println(SEPARATEUR);
+
+    DoubleSummaryStatistics stats = this.historicalPrices.values()
+        .stream()
+        .mapToDouble(Double::doubleValue)
+        .summaryStatistics();
+
+    System.out.println("Nombre de valeurs : " + stats.getCount());
+    System.out.println("Minimum           : " + stats.getMin());
+    System.out.println("Maximum           : " + stats.getMax());
+    System.out.println("Moyenne           : " + stats.getAverage());
+    System.out.println("Somme             : " + stats.getSum());
+  }
+
+  public Double getHistoricalPrice(final Date date) {
+    if (this.historicalPrices.containsKey(date))
+      return this.historicalPrices.get(date);
+    else
+      throw new IllegalArgumentException();
   }
 
   /**
