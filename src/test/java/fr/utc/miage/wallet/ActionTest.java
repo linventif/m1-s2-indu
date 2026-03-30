@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
@@ -90,5 +94,32 @@ class ActionTest {
     Action act1 = new Action(CORRECT_LABEL, CORRECT_PRICE);
     Action act2 = new Action(CORRECT_LABEL, CORRECT_PRICE);
     assertEquals(act1.hashCode(), act2.hashCode());
+  }
+
+  @Test
+  void getActionsByCategoryTest() {
+    final String industrialLabel = "Industrial Test Action";
+    final String otherLabel = "Other Test Action";
+
+    Action existingIndustrial = Action.getActionByLabel(industrialLabel);
+    if (existingIndustrial != null) {
+      existingIndustrial.delete();
+    }
+    Action existingOther = Action.getActionByLabel(otherLabel);
+    if (existingOther != null) {
+      existingOther.delete();
+    }
+
+    Action industrialAction = new Action(industrialLabel, CORRECT_PRICE, ActionCategory.INDUSTRIAL);
+    Action otherAction = new Action(otherLabel, CORRECT_PRICE, ActionCategory.OTHER);
+
+    Map<String, Action> industrialActions = Action.getActionsByCategory(ActionCategory.INDUSTRIAL);
+
+    assertTrue(industrialActions.containsKey(industrialLabel));
+    assertEquals(ActionCategory.INDUSTRIAL, industrialActions.get(industrialLabel).getCategory());
+    assertFalse(industrialActions.containsKey(otherLabel));
+
+    industrialAction.delete();
+    otherAction.delete();
   }
 }
