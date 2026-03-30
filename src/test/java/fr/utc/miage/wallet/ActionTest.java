@@ -1,8 +1,8 @@
 package fr.utc.miage.wallet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
@@ -16,14 +16,12 @@ class ActionTest {
 
   @Test
   void actionConstructorTest() {
-    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-    assertNotNull(act);
+    assertDoesNotThrow(() -> new Action(CORRECT_LABEL, CORRECT_PRICE));
   }
 
   @Test
   void actionConstructorWithCategoryTest() {
-    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
-    assertNotNull(act);
+    Action act = assertDoesNotThrow(() -> new Action(CORRECT_LABEL, CORRECT_PRICE, ActionCategory.INDUSTRIAL));
     assertEquals(ActionCategory.INDUSTRIAL, act.getCategory());
   }
 
@@ -63,14 +61,14 @@ class ActionTest {
   @Test
   void actionToStringTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-    assertEquals("Action: OVH (10.0€)", act.toString());
+    assertEquals("Action: " + CORRECT_LABEL + " (" + CORRECT_PRICE + "€)", act.toString());
   }
 
   @Test
   void actionDeleteTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     act.delete();
-    Action act2 = Action.getActionByLabel("OVH");
+    Action act2 = Action.getActionByLabel(CORRECT_LABEL);
     assertNull(act2);
   }
 
