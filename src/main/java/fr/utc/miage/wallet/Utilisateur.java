@@ -47,8 +47,9 @@ public class Utilisateur {
     if (amount <= 0) {
       throw new IllegalArgumentException("Amount must be positive");
     }
-    historiMouvementSold.add("Ajout d'argent :" + amount);
+    
     this.cashAmount += amount;
+    historiMouvementSold.add("Ajout d'argent:" + amount +" Current sold :" + this.cashAmount );
   }
 
   public void setWallet(final Wallet wallet) {
@@ -61,7 +62,7 @@ public class Utilisateur {
     if (action.getPrice() * quantity <= this.cashAmount) {
       this.cashAmount -= action.getPrice() * quantity;
       this.getWallet().addAction(action, quantity);
-      historiMouvementSold.add("Action acheté :" + action.toString() + this.cashAmount);
+      historiMouvementSold.add("Action acheté :" + action.toString() +" Current sold :"+ this.cashAmount);
     }
 
   }
@@ -75,6 +76,7 @@ public class Utilisateur {
 
     this.getWallet().removeAction(action, quantity);
     this.cashAmount += action.getPrice() * quantity;
+    historiMouvementSold.add("Action sold :" + action.toString() +" Current sold :"+ this.cashAmount);
   }
 
   public List<String> getHistoriqueMouvementSold(){
