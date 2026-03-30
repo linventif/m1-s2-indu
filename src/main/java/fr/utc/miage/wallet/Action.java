@@ -257,7 +257,7 @@ public class Action {
             }
         }
     } catch (IOException e) {
-        e.printStackTrace();
+        throw new IllegalStateException("Error reading CSV file: " + e.getMessage(), e);
     }
   } 
 

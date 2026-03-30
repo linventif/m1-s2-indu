@@ -386,7 +386,7 @@ class ActionTest {
   @Test
   void testImportNonExistentFile() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-    assertDoesNotThrow(() -> act.importHistoricalPrices(NON_EXISTENT_CSV));
+    assertThrows(IllegalStateException.class, () -> act.importHistoricalPrices(NON_EXISTENT_CSV));
   }
 
 }
