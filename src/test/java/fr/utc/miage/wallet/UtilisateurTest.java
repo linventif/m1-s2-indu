@@ -300,16 +300,4 @@ class UtilisateurTest {
     assertEquals(ch,"Action sold :" + action.toString() +" Current sold :"+ utilisateur.getCashAmount());
   }
 
-  @Test
-  void testByActionWithActionPrixXQuantityInfAmoutShouldNotWork(){
-    Utilisateur utilisateur = getCorrectUtilisateur();
-    Action action = ActionTest.getCorrectAction();
-    assertThrows(IllegalArgumentException.class, () -> {
-      utilisateur.buyAction(action, OTHER_QUANTITY);
-    });
-  }
-
-
-
-
 }

@@ -1,17 +1,14 @@
 package fr.utc.miage.wallet;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-/**
- * Représente une action financière manipulée par l'application.
- * <p>
- * Une action peut être simple, c'est-à-dire portée uniquement par son propre
- * prix, ou composée, auquel cas elle décrit une composition d'autres actions.
- * Chaque action est également enregistrée dans un registre statique permettant
- * de la retrouver par libellé.
- */
 public class Action {
 
   /**
@@ -46,11 +43,11 @@ public class Action {
   /**
    * Crée une action simple avec une catégorie explicite.
    *
-   * @param label le libellé unique de l'action
-   * @param price le prix courant de l'action
+   * @param label    le libellé unique de l'action
+   * @param price    le prix courant de l'action
    * @param category la catégorie de l'action
    * @throws IllegalArgumentException si le libellé est vide ou nul, ou si le
-   *         prix est nul ou négatif
+   *                                  prix est nul ou négatif
    */
   public Action(final String label, final Double price, final ActionCategory category) {
     validate(label, price);
@@ -66,12 +63,12 @@ public class Action {
   /**
    * Crée une action composée à partir d'une composition de sous-actions.
    *
-   * @param label le libellé unique de l'action
-   * @param price le prix courant de l'action
+   * @param label       le libellé unique de l'action
+   * @param price       le prix courant de l'action
    * @param composition la composition de l'action, exprimée sous forme de
-   *        pondérations par libellé
+   *                    pondérations par libellé
    * @throws IllegalArgumentException si le libellé est vide ou nul, ou si le
-   *         prix est nul ou négatif
+   *                                  prix est nul ou négatif
    */
   public Action(final String label, final Double price, final Map<String, Float> composition) {
     validate(label, price);
@@ -100,7 +97,7 @@ public class Action {
    * @param label le libellé à valider
    * @param price le prix à valider
    * @throws IllegalArgumentException si le libellé est vide ou nul, ou si le
-   *         prix est nul ou négatif
+   *                                  prix est nul ou négatif
    */
   private static void validate(final String label, final Double price) {
     if (label == null || label.isEmpty()) {
@@ -216,10 +213,10 @@ public class Action {
   /**
    * Ajoute un prix historique pour une date donnée.
    *
-   * @param date la date associée au prix
+   * @param date  la date associée au prix
    * @param price le prix historique à enregistrer
    * @throws IllegalArgumentException si le prix est négatif ou si la date est
-   *         nulle
+   *                                  nulle
    */
   public void addHistoricalPrice(final Date date, final double price) {
     if (price < 0) {
@@ -232,10 +229,62 @@ public class Action {
   }
 
   /**
-   * Retourne une représentation textuelle simple de l'action.
+   * Imports historical prices from a CSV file.
    *
-   * @return une chaîne décrivant le libellé et le prix de l'action
+   * @param csvFilePath the path to the CSV file containing historical prices.
+   *                    The CSV file should have two columns: "date" and "price",
+   *                    first line is a header.
+   *                    The "date" column should be in the format "yyyy-MM-dd",
+   *                    and the "price" column should contain the corresponding
+   *                    price for that date.
+   * @throws IOException              if an I/O error occurs while reading the CSV
+   *                                  file
+   * @throws IllegalArgumentException if the CSV file is not properly formatted or
+   *                                  if any of the data is invalid
    */
+  public void importHistoricalPrices(String csvFilePath) {
+    try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+      String line;
+      String headerLine = br.readLine();
+      if (headerLine == null || !headerLine.trim().equals("date,price")) {
+        throw new IllegalArgumentException("Invalid CSV header");
+      }
+      while ((line = br.readLine()) != null) {
+        String[] values = line.split(",");
+        if (values.length == 2) {
+          processHistoricalPriceLine(values);
+        }
+      }
+    } catch (IOException e) {
+      throw new IllegalStateException("Error reading CSV file: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Processes a line from the historical prices CSV file.
+   *
+   * @param values the array containing date and price as strings
+   */
+  private void processHistoricalPriceLine(String[] values) {
+    try {
+      Date date = Date.valueOf(values[0].trim());
+      double priceValue = Double.parseDouble(values[1].trim());
+      addHistoricalPrice(date, priceValue);
+    } catch (IllegalArgumentException e) {
+      System.out.println("Skipping invalid line in CSV: " + String.join(",", values) + " - " + e.getMessage());
+    }
+  }
+
+  public double getPriceAtDate(Date date) {
+    if (historicalPrices != null) {
+      Double historicalPrice = historicalPrices.get(date);
+      if (historicalPrice != null) {
+        return historicalPrice;
+      }
+    }
+    return price;
+  }
+
   @Override
   public String toString() {
     return "Action: " + label + " (" + price + "€)";
@@ -251,10 +300,10 @@ public class Action {
   }
 
   /**
-   * Retourne l'historique des prix sous forme textuelle.
+   * Returns a string representation of the historical prices.
    *
-   * @return une chaîne multi-ligne décrivant l'historique, ou {@code null} si
-   *         aucun historique n'est disponible
+   * @return a string containing the historical prices or null if there are no
+   *         historical prices
    */
   public String getHistoricalPricesString() {
     StringBuilder sb = new StringBuilder();
@@ -266,6 +315,7 @@ public class Action {
       sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
     }
     return sb.toString();
+
   }
 
   /**
