@@ -50,24 +50,15 @@ class ActionTest {
 
   @Test
   void actionConstructorInvalidLabelTest() {
-
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action(null, CORRECT_PRICE);
-    }, "Name shoudn't be null");
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action("", CORRECT_PRICE);
-    }, "Name shoudn't be null");
-
+    assertThrows(IllegalArgumentException.class, () -> new Action(null, CORRECT_PRICE), "Name shoudn't be null");
+    assertThrows(IllegalArgumentException.class, () -> new Action("", CORRECT_PRICE), "Name shoudn't be null");
   }
 
   @Test
   void actionConstructorInvalidPriceTest() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action(CORRECT_LABEL, -10.0);
-    }, "Price shoudn't be negative");
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action(CORRECT_LABEL, (Double) null);
-    }, "Price shoudn't be null");
+    assertThrows(IllegalArgumentException.class, () -> new Action(CORRECT_LABEL, -10.0), "Price shoudn't be negative");
+    assertThrows(IllegalArgumentException.class, () -> new Action(CORRECT_LABEL, (Double) null),
+        "Price shoudn't be null");
   }
 
   @Test
@@ -144,9 +135,9 @@ class ActionTest {
   void actionEqualsEdgeCasesTest() {
     Action act = new Action("Edge Action", CORRECT_PRICE);
 
-    assertTrue(act.equals(act));
-    assertFalse(act.equals(null));
-    assertFalse(act.equals("not an action"));
+    assertEquals(act, act);
+    assertNotEquals(null, act);
+    assertNotEquals("not an action", act);
   }
 
   @Test
@@ -164,10 +155,10 @@ class ActionTest {
     Action composedReference = new Action("Composed Action", CORRECT_PRICE, compositionA);
     Action differentComposition = new Action("Composed Action", CORRECT_PRICE, compositionB);
 
-    assertFalse(simpleReference.equals(differentPrice));
-    assertFalse(simpleReference.equals(differentCategory));
-    assertFalse(simpleReference.equals(differentType));
-    assertFalse(composedReference.equals(differentComposition));
+    assertNotEquals(simpleReference, differentPrice);
+    assertNotEquals(simpleReference, differentCategory);
+    assertNotEquals(simpleReference, differentType);
+    assertNotEquals(composedReference, differentComposition);
   }
 
   @Test
@@ -178,7 +169,7 @@ class ActionTest {
     composition.put("Part A", 1.0f);
     withComposition.setComposition(composition);
 
-    assertFalse(withoutComposition.equals(withComposition));
+    assertNotEquals(withoutComposition, withComposition);
   }
 
   @Test
@@ -197,7 +188,7 @@ class ActionTest {
 
     assertEquals(first, second);
     assertEquals(first.hashCode(), second.hashCode());
-    assertFalse(first.equals(nonNullLabelAction));
+    assertNotEquals(first, nonNullLabelAction);
     assertDoesNotThrow(first::hashCode);
   }
 
@@ -245,14 +236,12 @@ class ActionTest {
   @Test
   void addHistoricalPricesInvalidInputTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-    assertThrows(IllegalArgumentException.class, () -> {
-      act.addHistoricalPrice(null, 100.0);
-    }, "Date cannot be null");
-    assertThrows(IllegalArgumentException.class, () -> {
-      act.addHistoricalPrice(Date.valueOf("2023-01-01"), -100.0);
-    }, "Price cannot be negative");
+    assertThrows(IllegalArgumentException.class, () -> act.addHistoricalPrice(null, 100.0), "Date cannot be null");
+    Date testDate = Date.valueOf("2023-01-01");
+    assertThrows(IllegalArgumentException.class, () -> act.addHistoricalPrice(testDate, -100.0),
+        "Price cannot be negative");
   }
-  
+
   /**
    * Test the retrieval of historical prices.
    */
@@ -265,7 +254,7 @@ class ActionTest {
     assertEquals(2, historicalPrices.size());
     assertEquals(100.0, historicalPrices.get(Date.valueOf("2023-01-01")));
     assertEquals(101.0, historicalPrices.get(Date.valueOf("2023-01-02")));
-  } 
+  }
 
   @Test
   void getActionsByCategoryTest() {
