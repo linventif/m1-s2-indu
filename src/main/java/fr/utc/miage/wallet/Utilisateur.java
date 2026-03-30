@@ -11,8 +11,6 @@ public class Utilisateur {
   public static final Double INITIAL_CASH_AMOUNT = 200.00;
   private Double cashAmount;
 
-  
-
   public Utilisateur(final String firstName, final String name, final Date birthday) {
     this.firstName = firstName;
     this.name = name;
@@ -52,15 +50,11 @@ public class Utilisateur {
     this.wallet = wallet;
   }
 
-  public void setActionList(final List<Action> actionList) {
-    this.actionList = actionList;
-  }
-
   public void buyAction(final Action action, final Integer quantity) {
     if (action == null || quantity == null)
       throw new IllegalArgumentException("action ou quantity can not be null");
-    if (action.getPrice() * quantity <= this.cashAmout) {
-      this.cashAmout -= action.getPrice() * quantity;
+    if (action.getPrice() * quantity <= this.cashAmount) {
+      this.cashAmount -= action.getPrice() * quantity;
       this.getWallet().addAction(action, quantity);
     }
 

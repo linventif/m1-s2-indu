@@ -77,6 +77,9 @@ class UtilisateurTest {
     assertDoesNotThrow(() -> {
       utilisateur.buyAction(action, CORRECT_QUANTITY);
     });
+  }
+
+  @Test
   void testGetCashAmount() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Double result = utilisateur.getCashAmount();
