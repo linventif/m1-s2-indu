@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
@@ -21,6 +23,12 @@ class ActionTest {
   private static final String OTHER_CORRECT_LABEL = "Google";
   private static final Double CORRECT_PRICE = 10.0;
   private static final Double OTHER_CORRECT_PRICE = 15.0;
+
+  // CSV file paths for testing
+  private static final String VALID_CSV = "src/test/resources/prices_valid.csv";
+  private static final String MALFORMED_CSV = "src/test/resources/prices_malformed.csv";
+  private static final String EMPTY_CSV = "src/test/resources/only_header.csv";
+  private static final String NON_EXISTENT_CSV = "src/test/resources/ghost.csv";
 
   public static Action getCorrectAction() {
     return new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -256,6 +264,18 @@ class ActionTest {
     assertEquals(101.0, historicalPrices.get(Date.valueOf("2023-01-02")));
   }
 
+  /**
+    * Test the retrieval of price at a specific date, with and without historical prices.
+    */
+  @Test
+  void getPriceAtDateTest() {
+    Action act = new Action("Historical Price Action", CORRECT_PRICE);
+    Date date = Date.valueOf("2023-01-01");
+    act.addHistoricalPrice(date, 100.0);
+    assertEquals(100.0, act.getPriceAtDate(date));
+    assertEquals(CORRECT_PRICE, act.getPriceAtDate(Date.valueOf("2022-12-31")));
+  }
+
   @Test
   void getActionsByCategoryTest() {
     final String industrialLabel = "Industrial Test Action";
@@ -284,36 +304,80 @@ class ActionTest {
   }
 
   @Test
- void getHistoricalPricesStringEmptyTest() {
-   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-   String expected = null;
-   assertEquals(expected, act.getHistoricalPricesString());
- }
+  void getHistoricalPricesStringEmptyTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    String expected = null;
+    assertEquals(expected, act.getHistoricalPricesString());
+  }
 
 
- @Test
- void getHistoricalPricesStringSingleEntryTest() {
-   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-   Date date = Date.valueOf("2023-01-01");
-   act.addHistoricalPrice(date, 123.45);
-   String result = act.getHistoricalPricesString();
-   assertTrue(result.contains("Action: " + CORRECT_LABEL));
-   assertTrue(result.contains("Historical Prices:"));
-   assertTrue(result.contains(date.toString() + ": 123.45€"));
- }
+  @Test
+  void getHistoricalPricesStringSingleEntryTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Date date = Date.valueOf("2023-01-01");
+    act.addHistoricalPrice(date, 123.45);
+    String result = act.getHistoricalPricesString();
+    assertTrue(result.contains("Action: " + CORRECT_LABEL));
+    assertTrue(result.contains("Historical Prices:"));
+    assertTrue(result.contains(date.toString() + ": 123.45€"));
+  }
 
 
- @Test
- void getHistoricalPricesStringMultipleEntriesTest() {
-   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-   Date date1 = Date.valueOf("2023-01-01");
-   Date date2 = Date.valueOf("2023-01-02");
-   act.addHistoricalPrice(date1, 100.0);
-   act.addHistoricalPrice(date2, 200.0);
-   String result = act.getHistoricalPricesString();
-   assertTrue(result.contains(date1.toString() + ": 100.0€"));
-   assertTrue(result.contains(date2.toString() + ": 200.0€"));
-   assertTrue(result.startsWith("Action: " + CORRECT_LABEL));
- }
+  @Test
+  void getHistoricalPricesStringMultipleEntriesTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Date date1 = Date.valueOf("2023-01-01");
+    Date date2 = Date.valueOf("2023-01-02");
+    act.addHistoricalPrice(date1, 100.0);
+    act.addHistoricalPrice(date2, 200.0);
+    String result = act.getHistoricalPricesString();
+    assertTrue(result.contains(date1.toString() + ": 100.0€"));
+    assertTrue(result.contains(date2.toString() + ": 200.0€"));
+    assertTrue(result.startsWith("Action: " + CORRECT_LABEL));
+  }
+
+  /**
+    * Test the csv import of historical prices.
+    */
+  @Test
+  void testImportValidCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.importHistoricalPrices(VALID_CSV);
+
+    assertEquals(100.0, act.getPriceAtDate(Date.valueOf("2023-01-01")));
+    assertEquals(101.0, act.getPriceAtDate(Date.valueOf("2023-01-02")));
+    assertEquals(99.0, act.getPriceAtDate(Date.valueOf("2023-01-03")));
+  }
+
+  /**
+    * Test the csv import of historical prices.
+    */
+  @Test
+  void testImportMalformedCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.importHistoricalPrices(MALFORMED_CSV);
+
+    assertEquals(100.0, act.getPriceAtDate(Date.valueOf("2023-01-01")));
+    assertEquals(99.0, act.getPriceAtDate(Date.valueOf("2023-01-02")));
+  }
+
+  /**
+    * Test the csv import of historical prices with a non-existent file.
+    */
+  @Test
+  void testImportEmptyCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.importHistoricalPrices(EMPTY_CSV);
+    assertEquals(0, act.getHistoricalPrices().size());
+  }
+
+  /**
+    * Test the csv import of historical prices with a non-existent file.
+    */
+  @Test
+  void testImportNonExistentFile() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    assertDoesNotThrow(() -> act.importHistoricalPrices(NON_EXISTENT_CSV));
+  }
 
 }

@@ -1,4 +1,7 @@
 package fr.utc.miage.wallet;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,6 +126,53 @@ public class Action {
     this.historicalPrices.put(date, price);
   }
 
+  /**
+  * Imports historical prices from a CSV file.
+  *
+  * @param csvFilePath the path to the CSV file containing historical prices.
+  * The CSV file should have two columns: "date" and "price", first line is a header.
+  * The "date" column should be in the format "yyyy-MM-dd", and the "price" column should contain the corresponding price for that date.
+  * @throws IOException if an I/O error occurs while reading the CSV file
+  * @throws IllegalArgumentException if the CSV file is not properly formatted or if any of the data is invalid
+  */
+  public void importHistoricalPrices(String csvFilePath) {
+    try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+        String line;
+        br.readLine(); // Skip header line
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+            if (values.length == 2) {
+                try {
+                    Date date = Date.valueOf(values[0].trim());
+                    double priceValue = Double.parseDouble(values[1].trim());
+                    addHistoricalPrice(date, priceValue);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+  } 
+
+  /**
+  * Get the price of the action at a specific date.
+  *
+  * @param date the date for which to get the price
+  * @return the price of the action at the given date or the default price if no historical price is found for that date
+  */
+  public double getPriceAtDate(Date date) {
+    if (historicalPrices != null) {
+      Double historicalPrice = historicalPrices.get(date);
+      if (historicalPrice != null) {
+        return historicalPrice;
+      }
+      }
+    return price;
+  }
+
+
   @Override
   public String toString() {
     return "Action: " + label + " (" + price + "€)";
@@ -137,18 +187,18 @@ public class Action {
   *
   * @return a string containing the historical prices or null if there are no historical prices
   */
- public String getHistoricalPricesString() {
-   StringBuilder sb = new StringBuilder();
-   if (historicalPrices.isEmpty()) {
-     return null;
-   }
-   sb.append("Action: ").append(label).append("\n").append(" Historical Prices: ");
-   for (Map.Entry<Date, Double> entry : historicalPrices.entrySet()) {
-     sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
-   }
-   return sb.toString();
-  
- }
+  public String getHistoricalPricesString() {
+    StringBuilder sb = new StringBuilder();
+    if (historicalPrices.isEmpty()) {
+      return null;
+    }
+    sb.append("Action: ").append(label).append("\n").append(" Historical Prices: ");
+    for (Map.Entry<Date, Double> entry : historicalPrices.entrySet()) {
+      sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
+    }
+    return sb.toString();
+    
+  }
 
   @Override
   public int hashCode() {
