@@ -6,15 +6,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-/**
- * Représente une action financière manipulée par l'application.
- * <p>
- * Une action peut être simple, c'est-à-dire portée uniquement par son propre
- * prix, ou composée, auquel cas elle décrit une composition d'autres actions.
- * Chaque action est également enregistrée dans un registre statique permettant
- * de la retrouver par libellé.
- */
+
 public class Action {
 
   /**
@@ -272,7 +266,7 @@ public class Action {
         double priceValue = Double.parseDouble(values[1].trim());
         addHistoricalPrice(date, priceValue);
     } catch (IllegalArgumentException e) {
-        e.printStackTrace();
+        System.out.println("Skipping invalid line in CSV: " + String.join(",", values) + " - " + e.getMessage());
     }
   }
 
