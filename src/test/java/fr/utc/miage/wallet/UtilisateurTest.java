@@ -2,18 +2,18 @@ package fr.utc.miage.wallet;
 
 import java.sql.Date;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 class UtilisateurTest {
-  private static final String NAME = "Doe";
-  private static final String FIRST_NAME = "John";
-  private static final int CORRECT_QUANTITY = 3;
-  private static final Date BIRTHDAY = Date.valueOf("2000-01-01");
+  private final String NAME = "Doe";
+  private final String FIRST_NAME = "John";
+  private final Date BIRTHDAY = Date.valueOf("2000-01-01");
+  private final Wallet WALLET = new Wallet();
 
-  public Utilisateur getCorrectUtilisateur() {
+  public Utilisateur getCorrectUtilisateur(){
     return new Utilisateur(FIRST_NAME, NAME, BIRTHDAY);
   }
 
@@ -42,7 +42,7 @@ class UtilisateurTest {
   void testGetWallet() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Wallet result = utilisateur.getWallet();
-    assertEquals(new Wallet(), result);
+    assertEquals(WALLET, result);
   }
 
   @Test
