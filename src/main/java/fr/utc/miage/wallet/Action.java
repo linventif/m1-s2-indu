@@ -23,6 +23,7 @@ public class Action {
     this(label, price, ActionCategory.OTHER);
   }
 
+  // Creation d'une action simple
   public Action(final String label, final Double price, final ActionCategory category) {
     validate(label, price);
     this.label = label;
@@ -33,6 +34,7 @@ public class Action {
     ACTIONS.put(label, this);
   }
 
+  // Creation d'une action composee
   public Action(final String label, final Double price, final Map<String, Float> composition) {
     validate(label, price);
     this.label = label;
