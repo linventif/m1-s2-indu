@@ -38,6 +38,7 @@ limitations under the License.
         <maven.compiler.target>21</maven.compiler.target>
 <sonar.projectKey>linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK</sonar.projectKey>
 <sonar.host.url>https://sorar.linv.dev</sonar.host.url>
+        <sonar.coverage.exclusions>src/main/java/fr/utc/miage/wallet/Demo.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -75,6 +76,16 @@ limitations under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <locale>fr</locale>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
@@ -140,6 +151,8 @@ limitations under the License.
                 <version>3.12.0</version>
                 <configuration>
                     <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <locale>fr</locale>
                 </configuration>
             </plugin>
         </plugins>
