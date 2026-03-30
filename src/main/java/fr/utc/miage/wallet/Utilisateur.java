@@ -51,12 +51,16 @@ public class Utilisateur {
   }
 
   public void buyAction(final Action action, final Integer quantity) {
-    if (action == null || quantity == null)
-      throw new IllegalArgumentException("action ou quantity can not be null");
-    if (action.getPrice() * quantity <= this.cashAmount) {
+    if (this.iBelieveICanBuy(action, quantity)) {
       this.cashAmount -= action.getPrice() * quantity;
       this.getWallet().addAction(action, quantity);
     }
 
+  }
+
+  public boolean iBelieveICanBuy(Action action, Integer quantity) {
+    if (action == null || quantity == null)
+      throw new IllegalArgumentException("action ou quantity can not be null");
+    return action.getPrice() * quantity <= this.cashAmount;
   }
 }
