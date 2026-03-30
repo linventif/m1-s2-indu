@@ -1,6 +1,9 @@
 package fr.utc.miage.wallet;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Utilisateur {
   private final String name;
@@ -10,6 +13,7 @@ public class Utilisateur {
 
   public static final Double INITIAL_CASH_AMOUNT = 200.00;
   private Double cashAmount;
+  private List<String> historiMouvementSold = new ArrayList<>();
 
   public Utilisateur(final String firstName, final String name, final Date birthday) {
     this.firstName = firstName;
@@ -43,6 +47,7 @@ public class Utilisateur {
     if (amount <= 0) {
       throw new IllegalArgumentException("Amount must be positive");
     }
+    historiMouvementSold.add("Ajout d'argent :" + amount);
     this.cashAmount += amount;
   }
 
@@ -54,6 +59,7 @@ public class Utilisateur {
     if (this.iBelieveICanBuy(action, quantity)) {
       this.cashAmount -= action.getPrice() * quantity;
       this.getWallet().addAction(action, quantity);
+      historiMouvementSold.add("Action acheté :" + action.toString() + this.cashAmount);
     }
 
   }
@@ -74,5 +80,4 @@ public class Utilisateur {
 
     this.getWallet().removeAction(action, quantity);
     this.cashAmount += action.getPrice() * quantity;
-  }
-}
+  }}
