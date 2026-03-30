@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
@@ -266,8 +265,9 @@ class ActionTest {
   }
 
   /**
-    * Test the retrieval of price at a specific date, with and without historical prices.
-    */
+   * Test the retrieval of price at a specific date, with and without historical
+   * prices.
+   */
   @Test
   void getPriceAtDateTest() {
     Action act = new Action("Historical Price Action", CORRECT_PRICE);
@@ -322,7 +322,6 @@ class ActionTest {
     assertTrue(result.contains(date.toString() + ": 123.45€"));
   }
 
-
   @Test
   void getHistoricalPricesStringMultipleEntriesTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -365,9 +364,11 @@ class ActionTest {
     assertDoesNotThrow(() -> {
       act.getActionAnalyse();
     });
+  }
+
   /**
-    * Test the csv import of historical prices.
-    */
+   * Test the csv import of historical prices.
+   */
   @Test
   void testImportValidCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -379,8 +380,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices.
-    */
+   * Test the csv import of historical prices.
+   */
   @Test
   void testImportMalformedCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -391,8 +392,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices with a non-existent file.
-    */
+   * Test the csv import of historical prices with a non-existent file.
+   */
   @Test
   void testImportEmptyCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -401,8 +402,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices with a non-existent file.
-    */
+   * Test the csv import of historical prices with a non-existent file.
+   */
   @Test
   void testImportInvalidHeaderCsv() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -410,8 +411,8 @@ class ActionTest {
   }
 
   /**
-    * Test the csv import of historical prices with a non-existent file.
-    */
+   * Test the csv import of historical prices with a non-existent file.
+   */
   @Test
   void testImportNonExistentFile() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
