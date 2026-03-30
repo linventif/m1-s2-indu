@@ -78,6 +78,16 @@ limitations under the License.
                 <version>3.2.5</version>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <locale>fr</locale>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <version>0.17</version>
@@ -141,6 +151,8 @@ limitations under the License.
                 <version>3.12.0</version>
                 <configuration>
                     <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <locale>fr</locale>
                 </configuration>
             </plugin>
         </plugins>
