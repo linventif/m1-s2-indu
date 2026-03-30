@@ -5,7 +5,6 @@ import java.sql.Date;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 
 class UtilisateurTest {
@@ -44,7 +43,7 @@ class UtilisateurTest {
   void testGetWallet() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Wallet result = utilisateur.getWallet();
-    assertEquals(WALLET, result);
+    assertEquals(new Wallet(), result);
   }
 
   @Test
