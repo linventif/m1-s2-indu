@@ -159,10 +159,11 @@ public class Action {
   public void getActionAnalyse() {
     // Trier par date pour une analyse plus lisible
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    final String SEPARATEUR = "+------------+---------+------------+";
 
-    System.out.println("+------------+---------+------------+");
+    System.out.println(SEPARATEUR);
     System.out.println("| Date       | Valeur  | Evolution  |");
-    System.out.println("+------------+---------+------------+");
+    System.out.println(SEPARATEUR);
 
     Double previousValue = null;
 
@@ -185,7 +186,7 @@ public class Action {
       previousValue = currentValue;
     }
 
-    System.out.println("+------------+---------+------------+");
+    System.out.println(SEPARATEUR);
 
     DoubleSummaryStatistics stats = this.historicalPrices.values()
         .stream()
