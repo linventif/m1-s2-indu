@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 class UtilisateurTest {
@@ -12,7 +14,6 @@ class UtilisateurTest {
   private final String FIRST_NAME = "John";
   private final Date BIRTHDAY = Date.valueOf("2000-01-01");
   private final Wallet WALLET = new Wallet();
-  private final List<Action> ACTION_LIST = new ArrayList<>();
 
   public Utilisateur getCorrectUtilisateur(){
     return new Utilisateur(FIRST_NAME, NAME, BIRTHDAY);
@@ -52,6 +53,50 @@ class UtilisateurTest {
     Wallet newWallet = new Wallet();
     utilisateur.setWallet(newWallet);
     assertEquals(newWallet, utilisateur.getWallet());
+  }
+
+  @Test
+  void testGetCashAmount() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double result = utilisateur.getCashAmount();
+    Double expected = Utilisateur.INITIAL_CASH_AMOUNT;
+    assertEquals(expected, result, 0.001);
+  }
+
+  @Test
+  void testAddCashAmount100euro() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double initialAmount = utilisateur.getCashAmount();
+    Double amountToAdd = 100.00;
+    utilisateur.addCashAmount(amountToAdd);
+    Double result = utilisateur.getCashAmount();
+    Double expected = initialAmount + amountToAdd;
+    assertEquals(expected, result, 0.001);
+  }
+
+  @Test
+  void testAddCashAmount1cent() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double initialAmount = utilisateur.getCashAmount();
+    Double amountToAdd = 0.01;
+    utilisateur.addCashAmount(amountToAdd);
+    Double result = utilisateur.getCashAmount();
+    Double expected = initialAmount + amountToAdd;
+    assertEquals(expected, result, 0.001);
+  }
+
+  @Test
+  void testAddCashAmount0euro() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double amountToAdd = 0.00;
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.addCashAmount(amountToAdd));
+  }
+
+  @Test
+  void testAddCashAmountNegative100euro() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double amountToAdd = -100.00;
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.addCashAmount(amountToAdd));
   }
 
 }
