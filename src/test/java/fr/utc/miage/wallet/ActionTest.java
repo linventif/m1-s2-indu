@@ -4,70 +4,73 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
 
-  private final @Test void actionConstructorTest() {
-    Action act = new Action("OVH", 10.0);
+  private final String CORRECT_LABEL = "OVH";
+  private final String OTHER_CORRECT_LABEL = "Google";
+  private final Double CORRECT_PRICE = 10.0;
+  private final Double OTHER_CORRECT_PRICE = 15.0;
+
+  @Test
+  void actionConstructorTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     assertNotNull(act);
   }
 
   @Test
   void actionConstructorInvalidLabelTest() {
-    try {
-      new Action(null, 10.0);
-    } catch (IllegalArgumentException e) {
-      assertEquals("Label cannot be null or empty", e.getMessage());
-    }
-    try {
-      new Action("", 10.0);
-    } catch (IllegalArgumentException e) {
-      assertEquals("Label cannot be null or empty", e.getMessage());
-    }
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Action(null, CORRECT_PRICE);
+    }, "Name shoudn't be null");
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Action("", CORRECT_PRICE);
+    }, "Name shoudn't be null");
+
   }
 
   @Test
   void actionConstructorInvalidPriceTest() {
-    try {
-      new Action("OVH", -10.0);
-    } catch (IllegalArgumentException e) {
-      assertEquals("Price cannot be negative", e.getMessage());
-    }
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Action(CORRECT_LABEL, -10.0);
+    }, "Price shoudn't be negative");
   }
 
   @Test
   void actionGettersTest() {
-    Action act = new Action("OVH", 10.0);
-    assertEquals("OVH", act.getLabel());
-    assertEquals(10.0, act.getPrice());
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    assertEquals(CORRECT_LABEL, act.getLabel());
+    assertEquals(CORRECT_PRICE, act.getPrice());
   }
 
   @Test
   void actionSetPriceTest() {
-    Action act = new Action("OVH", 10.0);
-    act.setPrice(15.0);
-    assertEquals(15.0, act.getPrice());
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.setPrice(OTHER_CORRECT_PRICE);
+    assertEquals(OTHER_CORRECT_PRICE, act.getPrice());
   }
 
   @Test
   void actionToStringTest() {
-    Action act = new Action("OVH", 10.0);
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     assertEquals("Action: OVH (10.0€)", act.toString());
   }
 
   @Test
   void actionDeleteTest() {
-    Action act = new Action("OVH", 10);
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     act.delete();
     assertNull(act);
   }
 
   @Test
   void actionEqualsTest() {
-    Action act1 = new Action("OVH", 10.0);
-    Action act2 = new Action("OVH", 10.0);
-    Action act3 = new Action("Google", 15.0);
+    Action act1 = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Action act2 = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Action act3 = new Action(OTHER_CORRECT_LABEL, CORRECT_PRICE);
     assertNotEquals(act2, act3);
     assertNotEquals(act1, act3);
     assertEquals(act1, act2);
@@ -78,8 +81,8 @@ class ActionTest {
   // hascode test
   @Test
   void actionHashCodeTest() {
-    Action act1 = new Action("OVH", 10.0);
-    Action act2 = new Action("OVH", 10.0);
+    Action act1 = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Action act2 = new Action(CORRECT_LABEL, CORRECT_PRICE);
     assertEquals(act1.hashCode(), act2.hashCode());
   }
 }
