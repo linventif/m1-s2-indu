@@ -86,5 +86,12 @@ public final class Demo {
     System.out.println("Valeur totale: " + utilisateur.getWallet().getTotalValue() + "EUR");
     System.out.println();
     System.out.println("Actions industrielles connues: " + Action.getActionsByCategory(ActionCategory.INDUSTRIAL));
+
+    System.out.println();
+    System.out.println("========================================");
+    System.out.println("DEMONSTRATION historique des prix d'une action");
+    System.out.println("========================================");
+    actionOvh.importHistoricalPrices("src/main/resources/ovh_historical_prices.csv");
+    System.out.println(actionOvh.getHistoricalPricesString());
   }
 }
