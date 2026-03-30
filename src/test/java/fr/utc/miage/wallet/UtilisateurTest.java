@@ -124,4 +124,79 @@ class UtilisateurTest {
     assertThrows(IllegalArgumentException.class, () -> utilisateur.addCashAmount(amountToAdd));
   }
 
+  @Test
+  void testSellActionShouldWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, CORRECT_QUANTITY);
+
+    assertDoesNotThrow(() -> utilisateur.sellAction(action, 1));
+  }
+
+  @Test
+  void testSellActionShouldAddCashAmount() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, CORRECT_QUANTITY);
+    Double cashAfterBuy = utilisateur.getCashAmount();
+
+    utilisateur.sellAction(action, 2);
+
+    assertEquals(cashAfterBuy + (action.getPrice() * 2), utilisateur.getCashAmount(), 0.001);
+  }
+
+  @Test
+  void testSellActionShouldDecreaseWalletQuantity() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, CORRECT_QUANTITY);
+
+    utilisateur.sellAction(action, 2);
+
+    assertEquals(1, utilisateur.getWallet().getActions().get(action));
+  }
+
+  @Test
+  void testSellActionShouldRemoveActionWhenSellingAllOwnedQuantity() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, CORRECT_QUANTITY);
+
+    utilisateur.sellAction(action, CORRECT_QUANTITY);
+
+    assertEquals(false, utilisateur.getWallet().getActions().containsKey(action));
+  }
+
+  @Test
+  void testSellActionActionNull81ShouldNotWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.sellAction(null, CORRECT_QUANTITY));
+  }
+
+  @Test
+  void testSellActionQuantiteNull82ShouldNotWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.sellAction(action, null));
+  }
+
+  @Test
+  void testSellActionQuantityZeroShouldNotWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.sellAction(action, 0));
+  }
+
+  @Test
+  void testSellActionShouldNotWorkWhenQuantityOwnedIsInsufficient() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, 1);
+
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.sellAction(action, CORRECT_QUANTITY));
+  }
+
 }

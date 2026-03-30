@@ -22,6 +22,27 @@ class Wallet {
     actions.put(action, actions.getOrDefault(action, 0) + quantity);
   }
 
+  public void removeAction(final Action action, final int quantity) {
+    if (action == null) {
+      throw new IllegalArgumentException("Action cannot be null");
+    }
+    if (quantity <= 0) {
+      throw new IllegalArgumentException("Quantity must be positive");
+    }
+
+    Integer ownedQuantity = actions.get(action);
+    if (ownedQuantity == null || ownedQuantity < quantity) {
+      throw new IllegalArgumentException("Not enough actions in wallet");
+    }
+
+    if (ownedQuantity.equals(quantity)) {
+      actions.remove(action);
+      return;
+    }
+
+    actions.put(action, ownedQuantity - quantity);
+  }
+
   public double getTotalValue() {
     double total = 0.0;
     for (Map.Entry<Action, Integer> entry : actions.entrySet()) {
