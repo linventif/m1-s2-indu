@@ -13,7 +13,8 @@ public class Utilisateur {
 
   public static final Double INITIAL_CASH_AMOUNT = 200.00;
   private Double cashAmount;
-  
+  private List<String> historiMouvementSold = new ArrayList<>();
+
   public Utilisateur(final String firstName, final String name, final Date birthday) {
     this.firstName = firstName;
     this.name = name;
