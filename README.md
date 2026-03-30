@@ -4,7 +4,6 @@
 
 [![Coverage](https://sorar.linv.dev/api/project_badges/measure?project=linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK&metric=coverage&token=sqb_d87853229bc05d9b5304356dabb2d0890a21ff66)](https://sorar.linv.dev/dashboard?id=linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK)
 
-
 ## Links
 
 - [JavaDoc](https://linventif.github.io/m1-s2-indu)
