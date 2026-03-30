@@ -42,6 +42,10 @@ limitations under the License.
   src/main/java/fr/utc/miage/wallet/DemoComplet.java,
   src/main/java/fr/utc/miage/wallet/DemoSimple.java
 </sonar.coverage.exclusions>
+<sonar.cpd.exclusions>
+  src/main/java/fr/utc/miage/wallet/DemoComplet.java,
+  src/main/java/fr/utc/miage/wallet/DemoSimple.java
+</sonar.cpd.exclusions>
 
     </properties>
 
