@@ -162,7 +162,14 @@ public class Utilisateur {
     this.cashAmount += action.getPrice() * quantity;
     historiMouvementSold.add("Action sold :" + action.toString() +" Current sold :"+ this.cashAmount);
   }
-   public List<String> getHistoriqueMouvementSold(){
+
+  /**
+   * Retourne l'historique textuel des mouvements de solde et des opérations
+   * d'achat ou de vente effectuées par l'utilisateur.
+   *
+   * @return la liste chronologique des mouvements enregistrés
+   */
+  public List<String> getHistoriqueMouvementSold() {
     return this.historiMouvementSold;
   }
 }
