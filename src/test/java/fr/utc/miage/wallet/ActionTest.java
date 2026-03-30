@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
@@ -20,6 +21,13 @@ class ActionTest {
   private static final String OTHER_CORRECT_LABEL = "Google";
   private static final Double CORRECT_PRICE = 10.0;
   private static final Double OTHER_CORRECT_PRICE = 15.0;
+
+  // CSV file paths for testing
+  private static final String VALID_CSV = "src/test/resources/prices_valid.csv";
+  private static final String MALFORMED_CSV = "src/test/resources/prices_malformed.csv";
+  private static final String EMPTY_CSV = "src/test/resources/only_header.csv";
+  private static final String INVALID_HEADER_CSV = "src/test/resources/invalid_header.csv";
+  private static final String NON_EXISTENT_CSV = "src/test/resources/ghost.csv";
 
   public static Action getCorrectAction() {
     return new Action(CORRECT_LABEL, CORRECT_PRICE);
@@ -49,24 +57,15 @@ class ActionTest {
 
   @Test
   void actionConstructorInvalidLabelTest() {
-
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action(null, CORRECT_PRICE);
-    }, "Name shoudn't be null");
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action("", CORRECT_PRICE);
-    }, "Name shoudn't be null");
-
+    assertThrows(IllegalArgumentException.class, () -> new Action(null, CORRECT_PRICE), "Name shoudn't be null");
+    assertThrows(IllegalArgumentException.class, () -> new Action("", CORRECT_PRICE), "Name shoudn't be null");
   }
 
   @Test
   void actionConstructorInvalidPriceTest() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action(CORRECT_LABEL, -10.0);
-    }, "Price shoudn't be negative");
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Action(CORRECT_LABEL, (Double) null);
-    }, "Price shoudn't be null");
+    assertThrows(IllegalArgumentException.class, () -> new Action(CORRECT_LABEL, -10.0), "Price shoudn't be negative");
+    assertThrows(IllegalArgumentException.class, () -> new Action(CORRECT_LABEL, (Double) null),
+        "Price shoudn't be null");
   }
 
   @Test
@@ -144,9 +143,9 @@ class ActionTest {
   void actionEqualsEdgeCasesTest() {
     Action act = new Action("Edge Action", CORRECT_PRICE);
 
-    assertTrue(act.equals(act));
-    assertFalse(act.equals(null));
-    assertFalse(act.equals("not an action"));
+    assertEquals(act, act);
+    assertNotEquals(null, act);
+    assertNotEquals("not an action", act);
   }
 
   @Test
@@ -164,10 +163,10 @@ class ActionTest {
     Action composedReference = new Action("Composed Action", CORRECT_PRICE, compositionA);
     Action differentComposition = new Action("Composed Action", CORRECT_PRICE, compositionB);
 
-    assertFalse(simpleReference.equals(differentPrice));
-    assertFalse(simpleReference.equals(differentCategory));
-    assertFalse(simpleReference.equals(differentType));
-    assertFalse(composedReference.equals(differentComposition));
+    assertNotEquals(simpleReference, differentPrice);
+    assertNotEquals(simpleReference, differentCategory);
+    assertNotEquals(simpleReference, differentType);
+    assertNotEquals(composedReference, differentComposition);
   }
 
   @Test
@@ -178,7 +177,7 @@ class ActionTest {
     composition.put("Part A", 1.0f);
     withComposition.setComposition(composition);
 
-    assertFalse(withoutComposition.equals(withComposition));
+    assertNotEquals(withoutComposition, withComposition);
   }
 
   @Test
@@ -197,7 +196,7 @@ class ActionTest {
 
     assertEquals(first, second);
     assertEquals(first.hashCode(), second.hashCode());
-    assertFalse(first.equals(nonNullLabelAction));
+    assertNotEquals(first, nonNullLabelAction);
     assertDoesNotThrow(first::hashCode);
   }
 
@@ -246,12 +245,10 @@ class ActionTest {
   @Test
   void addHistoricalPricesInvalidInputTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-    assertThrows(IllegalArgumentException.class, () -> {
-      act.addHistoricalPrice(null, 100.0);
-    }, "Date cannot be null");
-    assertThrows(IllegalArgumentException.class, () -> {
-      act.addHistoricalPrice(Date.valueOf("2023-01-01"), -100.0);
-    }, "Price cannot be negative");
+    assertThrows(IllegalArgumentException.class, () -> act.addHistoricalPrice(null, 100.0), "Date cannot be null");
+    Date testDate = Date.valueOf("2023-01-01");
+    assertThrows(IllegalArgumentException.class, () -> act.addHistoricalPrice(testDate, -100.0),
+        "Price cannot be negative");
   }
 
   /**
@@ -266,6 +263,18 @@ class ActionTest {
     assertEquals(2, historicalPrices.size());
     assertEquals(100.0, historicalPrices.get(Date.valueOf("2023-01-01")));
     assertEquals(101.0, historicalPrices.get(Date.valueOf("2023-01-02")));
+  }
+
+  /**
+    * Test the retrieval of price at a specific date, with and without historical prices.
+    */
+  @Test
+  void getPriceAtDateTest() {
+    Action act = new Action("Historical Price Action", CORRECT_PRICE);
+    Date date = Date.valueOf("2023-01-01");
+    act.addHistoricalPrice(date, 100.0);
+    assertEquals(100.0, act.getPriceAtDate(date));
+    assertEquals(CORRECT_PRICE, act.getPriceAtDate(Date.valueOf("2022-12-31")));
   }
 
   @Test
@@ -313,8 +322,9 @@ class ActionTest {
     assertTrue(result.contains(date.toString() + ": 123.45€"));
   }
 
+
   @Test
-  void testGetHistoricalPricesStringMultipleEntriesTest() {
+  void getHistoricalPricesStringMultipleEntriesTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     Date date1 = Date.valueOf("2023-01-01");
     Date date2 = Date.valueOf("2023-01-02");
@@ -355,6 +365,57 @@ class ActionTest {
     assertDoesNotThrow(() -> {
       act.getActionAnalyse();
     });
+  /**
+    * Test the csv import of historical prices.
+    */
+  @Test
+  void testImportValidCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.importHistoricalPrices(VALID_CSV);
+
+    assertEquals(100.0, act.getPriceAtDate(Date.valueOf("2023-01-01")));
+    assertEquals(101.0, act.getPriceAtDate(Date.valueOf("2023-01-02")));
+    assertEquals(99.0, act.getPriceAtDate(Date.valueOf("2023-01-03")));
+  }
+
+  /**
+    * Test the csv import of historical prices.
+    */
+  @Test
+  void testImportMalformedCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.importHistoricalPrices(MALFORMED_CSV);
+
+    assertEquals(100.0, act.getPriceAtDate(Date.valueOf("2023-01-01")));
+    assertEquals(99.0, act.getPriceAtDate(Date.valueOf("2023-01-02")));
+  }
+
+  /**
+    * Test the csv import of historical prices with a non-existent file.
+    */
+  @Test
+  void testImportEmptyCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.importHistoricalPrices(EMPTY_CSV);
+    assertEquals(0, act.getHistoricalPrices().size());
+  }
+
+  /**
+    * Test the csv import of historical prices with a non-existent file.
+    */
+  @Test
+  void testImportInvalidHeaderCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    assertThrows(IllegalArgumentException.class, () -> act.importHistoricalPrices(INVALID_HEADER_CSV));
+  }
+
+  /**
+    * Test the csv import of historical prices with a non-existent file.
+    */
+  @Test
+  void testImportNonExistentFile() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    assertThrows(IllegalStateException.class, () -> act.importHistoricalPrices(NON_EXISTENT_CSV));
   }
 
 }
