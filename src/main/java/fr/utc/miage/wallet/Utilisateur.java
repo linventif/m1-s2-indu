@@ -12,21 +12,6 @@ public class Utilisateur {
   private Wallet wallet;
   private Double cashAmout = 200.00;
 
-  public Utilisateur(String name, String firstName, Date birthday) {
-    this.name = name;
-    this.firstName = firstName;
-
-    LocalDate birthLocal = birthday.toLocalDate();
-    int age = Period.between(birthLocal, LocalDate.now()).getYears();
-
-    if (age < 18) {
-      throw new IllegalArgumentException("L'utilisateur doit avoir au moins 18 ans.");
-    }
-
-    this.birthday = birthday;
-    this.wallet = new Wallet();
-  }
-
   public String getName() {
     return this.name;
   }
@@ -37,22 +22,6 @@ public class Utilisateur {
 
   public Date getBirthday() {
     return birthday;
-  }
-
-  public Date getBirthday() {
-    return birthday;
-  }
-
-  public Wallet getWallet() {
-    return this.wallet;
-  }
-
-  public List<Action> getActionList() {
-    return actionList;
-  }
-
-  public void setWallet(Wallet wallet) {
-    this.wallet = wallet;
   }
 
   public Wallet getWallet() {

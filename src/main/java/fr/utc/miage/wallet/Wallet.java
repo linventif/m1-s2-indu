@@ -6,8 +6,16 @@ import java.util.Map;
 class Wallet {
   private HashMap<Action, Integer> actions;
 
-  public Wallet() {
-    this.actions = new HashMap<>();
+  private String code;
+  private ArrayList<Transaction> transactions;
+  private Map<Action, Integer> listAction;
+
+  public Wallet() {}
+
+  public Wallet(final String code) {
+    this.code = code;
+    this.transactions = new ArrayList<Transaction>();
+    this.listAction = new HashMap<Action, Integer>();
   }
 
   public Map<Action, Integer> getActions() {

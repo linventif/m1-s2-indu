@@ -1,13 +1,20 @@
 package fr.utc.miage.wallet;
 
-import java.util.HashMap;
+import java.util.Map;
+
 public class Action {
+
+  enum TypeAction {
+    SIMPLE,
+    COMPOSEE
+  }
+
   private String label;
   private double price;
-  private static HashMap<String, Action> actions = new HashMap<>();
-  private ActionCategory category;
+  private TypeAction type;
+  private Map<String, Float> composition;
 
-  public Action(String label, double price, ActionCategory category) {
+  public Action(final String label, final Double price) {
     if (label == null || label.isEmpty()) {
       throw new IllegalArgumentException("Label cannot be null or empty");
     } else if (price < 0) {
@@ -15,11 +22,11 @@ public class Action {
     }
     this.label = label;
     this.price = price;
-    this.category = category;
-    actions.put(label, this);
+    this.type = TypeAction.SIMPLE;
+    this.composition = null;
   }
 
-  public Action(String label, double price) {
+  public Action(final String label, final Double price, final Map<String, Float> composition) {
     if (label == null || label.isEmpty()) {
       throw new IllegalArgumentException("Label cannot be null or empty");
     } else if (price < 0) {
@@ -27,26 +34,12 @@ public class Action {
     }
     this.label = label;
     this.price = price;
-    this.category = ActionCategory.OTHER;
-    actions.put(label, this);
+    this.type = TypeAction.COMPOSEE;
+    this.composition = composition;
   }
 
-  public static Action getActionByLabel(String label) {
-    return actions.get(label);
-  }
-
-  public static HashMap<String, Action> getActions() {
-    return actions;
-  }
-
-  public static HashMap<String, Action> getActionsByCategory(ActionCategory category) {
-    HashMap<String, Action> result = new HashMap<>();
-    for (Action action : actions.values()) {
-      if (action.getCategory().equals(category.toString())) {
-        result.put(action.getLabel(), action);
-      }
-    }
-    return result;
+  public Action(String label2, int price2) {
+    // TODO Auto-generated constructor stub
   }
 
   public String getLabel() {
@@ -72,30 +65,71 @@ public class Action {
     this.price = price;
   }
 
-  public String toString() {
-    return "Action: " + label + " (" + price + "€), Category: " + category;
+  public TypeAction getType() {
+    return type;
+  }
+
+  public void setType(TypeAction type) {
+    this.type = type;
+  }
+
+  public Map<String, Float> getComposition() {
+    return composition;
+  }
+
+  public void setComposition(Map<String, Float> composition) {
+    this.composition = composition;
   }
 
   public void delete() {
     actions.remove(label);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    } else if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    } else {
-      Action other = (Action) obj;
-      return label.equals(other.label) && Double.compare(price, other.price) == 0;
-    }
+  public String toString() {
+    return "Action: " + label + " (" + price + "€)";
+  }
+
+  public String toStringC() {
+    return "Action: " + label + " (" + price + "€)" + " Composition " + composition;
   }
 
   @Override
   public int hashCode() {
-    int result = label.hashCode();
-    result = 31 * result + Double.hashCode(price);
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((label == null) ? 0 : label.hashCode());
+    long temp;
+    temp = Double.doubleToLongBits(price);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
+    result = prime * result + ((composition == null) ? 0 : composition.hashCode());
     return result;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Action other = (Action) obj;
+    if (label == null) {
+      if (other.label != null)
+        return false;
+    } else if (!label.equals(other.label))
+      return false;
+    if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+      return false;
+    if (type != other.type)
+      return false;
+    if (composition == null) {
+      if (other.composition != null)
+        return false;
+    } else if (!composition.equals(other.composition))
+      return false;
+    return true;
+  }
+
 }

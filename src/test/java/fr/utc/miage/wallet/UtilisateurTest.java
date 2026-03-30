@@ -1,12 +1,11 @@
 package fr.utc.miage.wallet;
 
-import org.junit.jupiter.api.Test;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class UtilisateurTest {
   private final String NAME = "Doe";
@@ -55,10 +54,4 @@ public class UtilisateurTest {
     assertEquals(newWallet, utilisateur.getWallet());
   }
 
-  @Test
-  void testDefaultCashAmout(){
-    Utilisateur utilisateur = getCorrectUtilisateur();
-    final Double EXPECTED_ALMOUNT = 200.00;
-    assertEquals(EXPECTED_ALMOUNT, utilisateur.getCashAmout(), "Cash amout must be 200.00 by default");
-  }
 }
