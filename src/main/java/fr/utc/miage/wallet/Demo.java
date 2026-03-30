@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("java:S106")
+@SuppressWarnings({ "java:S106", "java:S1192" })
 public final class Demo {
   public static void main(final String[] args) {
     Action actionOvh = new Action("OVH Demo", 10.0, ActionCategory.INDUSTRIAL);
