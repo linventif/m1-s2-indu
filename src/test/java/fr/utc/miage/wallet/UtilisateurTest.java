@@ -157,14 +157,14 @@ class UtilisateurTest {
   }
 
   @Test
-  void testSellActionShouldRemoveActionWhenSellingAllOwnedQuantity() {
+  void testSellActionShouldKeepActionWithZeroQuantityWhenSellingAllOwnedQuantity() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Action action = ActionTest.getCorrectAction();
     utilisateur.buyAction(action, CORRECT_QUANTITY);
 
     utilisateur.sellAction(action, CORRECT_QUANTITY);
 
-    assertEquals(false, utilisateur.getWallet().getActions().containsKey(action));
+    assertEquals(0, utilisateur.getWallet().getActions().get(action));
   }
 
   @Test

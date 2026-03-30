@@ -21,4 +21,15 @@ class WalletTest {
     wallet.addAction(action2, 3);
     assertEquals(110.0, wallet.getTotalValue(), 0.001);
   }
+
+  @Test
+  void testRemoveActionShouldKeepZeroQuantity() {
+    Wallet wallet = new Wallet();
+    Action action = new Action("Action 3", 10.0);
+    wallet.addAction(action, 2);
+
+    wallet.removeAction(action, 2);
+
+    assertEquals(0, wallet.getActions().get(action));
+  }
 }

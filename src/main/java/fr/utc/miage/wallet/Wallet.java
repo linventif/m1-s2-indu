@@ -35,11 +35,6 @@ class Wallet {
       throw new IllegalArgumentException("Not enough actions in wallet");
     }
 
-    if (ownedQuantity.equals(quantity)) {
-      actions.remove(action);
-      return;
-    }
-
     actions.put(action, ownedQuantity - quantity);
   }
 
