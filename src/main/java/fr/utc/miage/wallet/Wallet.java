@@ -81,11 +81,23 @@ class Wallet {
     return total;
   }
 
+  /**
+   * Retourne une représentation textuelle du portefeuille.
+   *
+   * @return une chaîne décrivant les actions et quantités présentes
+   */
   @Override
   public String toString() {
     return "Wallet actions: " + actions;
   }
 
+  /**
+   * Compare ce portefeuille à un autre objet.
+   *
+   * @param obj l'objet à comparer
+   * @return {@code true} si les deux objets représentent le même contenu,
+   *         {@code false} sinon
+   */
   @Override
   public boolean equals(final Object obj) {
     if (this == obj) {
@@ -97,6 +109,11 @@ class Wallet {
     return Objects.equals(actions, other.actions);
   }
 
+  /**
+   * Calcule le code de hachage du portefeuille à partir de son contenu.
+   *
+   * @return le code de hachage du portefeuille
+   */
   @Override
   public int hashCode() {
     return Objects.hash(actions);

@@ -3,12 +3,20 @@ package fr.utc.miage.wallet;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
+/**
+ * Représente une action financière manipulée par l'application.
+ * <p>
+ * Une action peut être simple ou composée, posséder une catégorie, un prix
+ * courant, une composition éventuelle et un historique de prix. Les actions
+ * sont également enregistrées dans un registre statique permettant de les
+ * retrouver par leur libellé.
+ */
 public class Action {
 
   /**
@@ -155,6 +163,73 @@ public class Action {
   }
 
   /**
+   * Affiche une analyse tabulaire de l'historique des prix de l'action ainsi
+   * qu'un résumé statistique simple.
+   * <p>
+   * La sortie est écrite sur la sortie standard et inclut la date, la valeur et
+   * l'évolution entre deux mesures successives.
+   */
+  public void getActionAnalyse() {
+    // Trier par date pour une analyse plus lisible
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    final String SEPARATEUR = "+------------+---------+------------+";
+
+    System.out.println(SEPARATEUR);
+    System.out.println("| Date       | Valeur  | Evolution  |");
+    System.out.println(SEPARATEUR);
+
+    Double previousValue = null;
+
+    for (Map.Entry<Date, Double> entry : this.historicalPrices.entrySet()) {
+      Double currentValue = entry.getValue();
+
+      String evolution;
+      if (previousValue == null) {
+        evolution = "N/A";
+      } else {
+        double percentChange = ((currentValue - previousValue) / previousValue) * 100;
+        evolution = String.format("%.2f%%", percentChange);
+      }
+
+      System.out.printf("| %-10s | %-7.2f | %-10s |\n",
+          sdf.format(entry.getKey()),
+          currentValue,
+          evolution);
+
+      previousValue = currentValue;
+    }
+
+    System.out.println(SEPARATEUR);
+
+    DoubleSummaryStatistics stats = this.historicalPrices.values()
+        .stream()
+        .mapToDouble(Double::doubleValue)
+        .summaryStatistics();
+
+    System.out.println("Nombre de valeurs : " + stats.getCount());
+    System.out.println("Minimum           : " + stats.getMin());
+    System.out.println("Maximum           : " + stats.getMax());
+    System.out.println("Moyenne           : " + stats.getAverage());
+    System.out.println("Somme             : " + stats.getSum());
+  }
+
+  /**
+   * Retourne le prix historique enregistré pour une date donnée.
+   *
+   * @param date la date recherchée
+   * @return le prix enregistré à cette date
+   * @throws IllegalArgumentException si aucun prix n'est disponible pour cette
+   *                                  date
+   */
+  public Double getHistoricalPrice(final Date date) {
+    if (this.historicalPrices.containsKey(date)) {
+      return this.historicalPrices.get(date);
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  /**
    * Modifie le prix courant de l'action.
    *
    * @param price le nouveau prix
@@ -229,20 +304,16 @@ public class Action {
   }
 
   /**
-   * Imports historical prices from a CSV file.
+   * Importe un historique de prix depuis un fichier CSV.
+   * <p>
+   * Le fichier doit contenir un en-tête exact {@code date,price}, puis une
+   * ligne par mesure avec une date au format {@code yyyy-MM-dd} et un prix.
    *
-   * @param csvFilePath the path to the CSV file containing historical prices.
-   *                    The CSV file should have two columns: "date" and "price",
-   *                    first line is a header.
-   *                    The "date" column should be in the format "yyyy-MM-dd",
-   *                    and the "price" column should contain the corresponding
-   *                    price for that date.
-   * @throws IOException              if an I/O error occurs while reading the CSV
-   *                                  file
-   * @throws IllegalArgumentException if the CSV file is not properly formatted or
-   *                                  if any of the data is invalid
+   * @param csvFilePath le chemin du fichier CSV à lire
+   * @throws IllegalArgumentException si l'en-tête du fichier est invalide
+   * @throws IllegalStateException    si une erreur de lecture survient
    */
-  public void importHistoricalPrices(String csvFilePath) {
+  public void importHistoricalPrices(final String csvFilePath) {
     try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
       String line;
       String headerLine = br.readLine();
@@ -261,11 +332,11 @@ public class Action {
   }
 
   /**
-   * Processes a line from the historical prices CSV file.
+   * Traite une ligne de fichier CSV représentant une date et un prix.
    *
-   * @param values the array containing date and price as strings
+   * @param values les deux colonnes lues dans le CSV
    */
-  private void processHistoricalPriceLine(String[] values) {
+  private void processHistoricalPriceLine(final String[] values) {
     try {
       Date date = Date.valueOf(values[0].trim());
       double priceValue = Double.parseDouble(values[1].trim());
@@ -275,7 +346,14 @@ public class Action {
     }
   }
 
-  public double getPriceAtDate(Date date) {
+  /**
+   * Retourne le prix historique à une date donnée, ou le prix courant si aucun
+   * historique n'est disponible pour cette date.
+   *
+   * @param date la date recherchée
+   * @return le prix à la date demandée, ou le prix courant par défaut
+   */
+  public double getPriceAtDate(final Date date) {
     if (historicalPrices != null) {
       Double historicalPrice = historicalPrices.get(date);
       if (historicalPrice != null) {
@@ -285,6 +363,11 @@ public class Action {
     return price;
   }
 
+  /**
+   * Retourne une représentation textuelle simple de l'action.
+   *
+   * @return une chaîne décrivant le libellé et le prix courant
+   */
   @Override
   public String toString() {
     return "Action: " + label + " (" + price + "€)";
@@ -300,10 +383,10 @@ public class Action {
   }
 
   /**
-   * Returns a string representation of the historical prices.
+   * Retourne une représentation textuelle de l'historique des prix.
    *
-   * @return a string containing the historical prices or null if there are no
-   *         historical prices
+   * @return une chaîne décrivant l'historique des prix, ou {@code null} si
+   *         aucun historique n'est enregistré
    */
   public String getHistoricalPricesString() {
     StringBuilder sb = new StringBuilder();
@@ -315,7 +398,6 @@ public class Action {
       sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
     }
     return sb.toString();
-
   }
 
   /**

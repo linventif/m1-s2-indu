@@ -89,8 +89,8 @@ class WalletTest {
     assertEquals(wallet1, wallet1);
     assertEquals(wallet1, wallet2);
     assertEquals(wallet1.hashCode(), wallet2.hashCode());
-    assertFalse(wallet1.equals(null));
-    assertFalse(wallet1.equals("wallet"));
+    assertNotEquals(null, wallet1);
+    assertNotEquals("wallet", wallet1);
     assertNotEquals(wallet1, wallet3);
   }
 }
