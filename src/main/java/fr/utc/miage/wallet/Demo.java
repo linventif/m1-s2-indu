@@ -75,6 +75,8 @@ public final class Demo {
         + actionOvh.getPriceAtDate(Date.valueOf("2026-01-04")));
     System.out.println("Historique OVH sous forme textuelle : ");
     System.out.println(actionOvh.getHistoricalPricesString());
+    System.out.println("Courbe OVH basee sur l'historique CSV :");
+    System.out.println(actionOvh.getHistoricalPriceCurveString());
     System.out.println("Analyse OVH :");
     actionOvh.getActionAnalyse();
 

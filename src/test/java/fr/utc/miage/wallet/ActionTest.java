@@ -336,6 +336,38 @@ class ActionTest {
   }
 
   @Test
+  void getHistoricalPriceCurveStringEmptyTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+
+    assertNull(act.getHistoricalPriceCurveString());
+  }
+
+  @Test
+  void getHistoricalPriceCurveStringShouldContainAxisDatesAndCurveTest() {
+    Action act = new Action("Curve Action", CORRECT_PRICE);
+    act.importHistoricalPrices(VALID_CSV);
+
+    String result = act.getHistoricalPriceCurveString();
+
+    assertTrue(result.contains("Courbe d'evolution du prix"));
+    assertTrue(result.contains("Dates    : 01/01   02/01   03/01"));
+    assertTrue(result.contains("*"));
+    assertTrue(result.contains("|"));
+  }
+
+  @Test
+  void getHistoricalPriceCurveStringShouldSortDatesBeforeRendering() {
+    Action act = new Action("Sorted Curve Action", CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-03"), 99.0);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    act.addHistoricalPrice(Date.valueOf("2023-01-02"), 101.0);
+
+    String result = act.getHistoricalPriceCurveString();
+
+    assertTrue(result.contains("Dates    : 01/01   02/01   03/01"));
+  }
+
+  @Test
   void testGetHistoricalPriceDateNullShouldNotWork() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
