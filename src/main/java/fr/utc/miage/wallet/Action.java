@@ -127,4 +127,14 @@ public class Action {
         && category == other.category
         && Objects.equals(composition, other.composition);
   }
+
+  public static Map<String, Action> getActionsByCategory(final ActionCategory category) {
+    Map<String, Action> result = new HashMap<>();
+    for (Map.Entry<String, Action> entry : ACTIONS.entrySet()) {
+      if (entry.getValue().getCategory() == category) {
+        result.put(entry.getKey(), entry.getValue());
+      }
+    }
+    return result;
+  }
 }
