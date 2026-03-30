@@ -46,6 +46,14 @@ public class Action {
     return label;
   }
 
+  public String getCategory() {
+    return category.toString();
+  }
+
+  public void setCategory(ActionCategory category) {
+    this.category = category;
+  }
+
   public double getPrice() {
     return price;
   }
@@ -74,7 +82,7 @@ public class Action {
   }
 
   public void delete() {
-    this.delete();
+    actions.remove(label);
   }
 
   public String toString() {

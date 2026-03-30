@@ -1,10 +1,10 @@
 package fr.utc.miage.wallet;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 class Wallet {
+  private HashMap<Action, Integer> actions;
 
   private String code;
   private ArrayList<Transaction> transactions;
@@ -18,32 +18,27 @@ class Wallet {
     this.listAction = new HashMap<Action, Integer>();
   }
 
-  public String getCode() {
-    return this.code;
+  public Map<Action, Integer> getActions() {
+    return this.actions;
   }
 
-  public ArrayList<Transaction> getTransactions() {
-    return this.transactions;
+  public void addAction(Action action, int quantity) {
+    if (quantity < 0) {
+      throw new IllegalArgumentException("Quantity cannot be negative");
+    }
+    actions.put(action, actions.getOrDefault(action, 0) + quantity);
   }
 
-  public Map<Action, Integer> getListAction() {
-    return this.listAction;
-  }
-
-  public void addTransaction(Transaction transaction) {
-    Action action = transaction.getAction();
-    this.transactions.add(transaction);
-
-    if (!this.listAction.containsKey(action))
-      this.listAction.put(action, transaction.getQuantity());
-    else
-      this.listAction.put(action, this.listAction.get(action) + transaction.getQuantity());
+  public double getTotalValue() {
+    double total = 0.0;
+    for (Map.Entry<Action, Integer> entry : actions.entrySet()) {
+      total += entry.getKey().getPrice() * entry.getValue();
+    }
+    return total;
   }
 
   @Override
   public String toString() {
-    return "Wallet [getCode()=" + getCode() + ", getTransactions()=" + getTransactions() + ", getListAction()="
-        + getListAction() + "]";
+    return "Wallet actions: " + actions.toString();
   }
-
 }

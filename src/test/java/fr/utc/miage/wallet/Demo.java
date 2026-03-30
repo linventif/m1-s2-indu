@@ -13,5 +13,12 @@ public class Demo {
     Action actGoogle = new Action(OTHER_NAME, OTHER_PRICE);
     System.out.println(actOVH);
     System.out.println(actGoogle);
+
+    // Wallet
+    Wallet wallet = new Wallet();
+    wallet.addAction(actOVH, 5);
+    wallet.addAction(actGoogle, 3);
+    System.out.println(wallet);
+    System.out.println("Total value: " + wallet.getTotalValue() + "€");
   }
 }

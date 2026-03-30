@@ -21,6 +21,13 @@ class ActionTest {
   }
 
   @Test
+  void actionConstructorWithCategoryTest() {
+    Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
+    assertNotNull(act);
+    assertEquals("INDUSTRIAL", act.getCategory());
+  }
+
+  @Test
   void actionConstructorInvalidLabelTest() {
 
     assertThrows(IllegalArgumentException.class, () -> {
@@ -63,7 +70,8 @@ class ActionTest {
   void actionDeleteTest() {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     act.delete();
-    assertNull(act);
+    Action act2 = Action.getActionByLabel("OVH");
+    assertNull(act2);
   }
 
   @Test
