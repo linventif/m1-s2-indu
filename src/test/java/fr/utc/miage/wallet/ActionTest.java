@@ -1,7 +1,7 @@
 package fr.utc.miage.wallet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,10 +13,14 @@ import org.junit.jupiter.api.Test;
 
 class ActionTest {
 
-  private final String CORRECT_LABEL = "OVH";
-  private final String OTHER_CORRECT_LABEL = "Google";
-  private final Double CORRECT_PRICE = 10.0;
-  private final Double OTHER_CORRECT_PRICE = 15.0;
+  private static final String CORRECT_LABEL = "OVH";
+  private static final String OTHER_CORRECT_LABEL = "Google";
+  private static final Double CORRECT_PRICE = 10.0;
+  private static final Double OTHER_CORRECT_PRICE = 15.0;
+
+  public static Action getCorrectAction() {
+    return new Action(CORRECT_LABEL, CORRECT_PRICE);
+  }
 
   @Test
   void actionConstructorTest() {
