@@ -3,6 +3,7 @@ package fr.utc.miage.wallet;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,6 +16,7 @@ class UtilisateurTest {
   private final String NAME = "Doe";
   private final String FIRST_NAME = "John";
   private final Integer CORRECT_QUANTITY = 3;
+  private final Integer OTHER_QUANTITY = 21;
   private final Date BIRTHDAY = Date.valueOf("2000-01-01");
 
   public Utilisateur getCorrectUtilisateur() {
@@ -266,5 +268,48 @@ class UtilisateurTest {
 
     assertThrows(IllegalArgumentException.class, () -> utilisateur.sellAction(action, CORRECT_QUANTITY));
   }
+
+  @Test
+  void testGetHistoriqueMouvementWithAddCashAmoutShouldWork(){
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double amountToAdd = 100.00;
+    utilisateur.addCashAmount(amountToAdd);
+    List<String> li = utilisateur.getHistoriqueMouvementSold();
+    String ch = li.get(0);
+  assertEquals(ch,"Ajout d'argent:" + amountToAdd +" Current sold :" + utilisateur.getCashAmount() );
+  }
+
+  @Test
+  void testGetHistoriqueMouvementWithBuyActionShouldWork(){
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, CORRECT_QUANTITY);
+    List<String> li = utilisateur.getHistoriqueMouvementSold();
+    String ch = li.get(0);
+    assertEquals(ch,"Action acheté :" + action.toString() +" Current sold :"+ utilisateur.getCashAmount());
+  }
+
+  @Test
+  void testGetHistoriqueMouvementWithSellActionShouldWork(){
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    utilisateur.buyAction(action, CORRECT_QUANTITY);
+    utilisateur.sellAction(action, CORRECT_QUANTITY);
+    List<String> li = utilisateur.getHistoriqueMouvementSold();
+    String ch = li.get(1);
+    assertEquals(ch,"Action sold :" + action.toString() +" Current sold :"+ utilisateur.getCashAmount());
+  }
+
+  @Test
+  void testByActionWithActionPrixXQuantityInfAmoutShouldNotWork(){
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    assertThrows(IllegalArgumentException.class, () -> {
+      utilisateur.buyAction(action, OTHER_QUANTITY);
+    });
+  }
+
+
+
 
 }
