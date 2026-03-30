@@ -23,3 +23,12 @@
 - JAVA doc
 - License
 - ...
+
+## Ordre du commit
+
+- dans une nouvelle branche
+- on fait autant de commit que l'on souhaite "commit"
+- on pull de ma branche
+- push dans ma branche
+- pull request dans le main
+- pas de merge sauf avec consentement !! 
