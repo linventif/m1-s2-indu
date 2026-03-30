@@ -2,7 +2,6 @@ package fr.utc.miage.wallet;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Action {
 
@@ -110,22 +109,44 @@ public class Action {
 
   @Override
   public int hashCode() {
-    return Objects.hash(label, price, type, category, composition);
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((label == null) ? 0 : label.hashCode());
+    long temp;
+    temp = Double.doubleToLongBits(price);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
+    result = prime * result + ((category == null) ? 0 : category.hashCode());
+    result = prime * result + ((composition == null) ? 0 : composition.hashCode());
+    return result;
   }
 
   @Override
-  public boolean equals(final Object obj) {
-    if (this == obj) {
+  public boolean equals(Object obj) {
+    if (this == obj)
       return true;
-    }
-    if (!(obj instanceof Action other)) {
+    if (obj == null)
       return false;
-    }
-    return Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
-        && Objects.equals(label, other.label)
-        && type == other.type
-        && category == other.category
-        && Objects.equals(composition, other.composition);
+    if (getClass() != obj.getClass())
+      return false;
+    Action other = (Action) obj;
+    if (label == null) {
+      if (other.label != null)
+        return false;
+    } else if (!label.equals(other.label))
+      return false;
+    if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+      return false;
+    if (type != other.type)
+      return false;
+    if (category != other.category)
+      return false;
+    if (composition == null) {
+      if (other.composition != null)
+        return false;
+    } else if (!composition.equals(other.composition))
+      return false;
+    return true;
   }
 
   public static Map<String, Action> getActionsByCategory(final ActionCategory category) {
