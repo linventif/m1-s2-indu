@@ -1,6 +1,8 @@
 package fr.utc.miage.wallet;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -40,6 +42,28 @@ class UtilisateurTest {
     Utilisateur utilisateur = getCorrectUtilisateur();
     String result = utilisateur.getName();
     assertEquals(NAME, result);
+  }
+
+  @Test
+  void testNameAndFirstNameAreStrings() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    assertTrue(utilisateur.getName() instanceof String);
+    assertTrue(utilisateur.getFirstName() instanceof String);
+  }
+
+  @Test
+  void testBirthdayIsDate() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    assertTrue(utilisateur.getBirthday() instanceof Date);
+  }
+
+  @Test
+  void testUserIsOlderThan18Years() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    LocalDate today = LocalDate.now();
+    LocalDate birthday = utilisateur.getBirthday().toLocalDate();
+    int ageInYears = Period.between(birthday, today).getYears();
+    assertTrue(ageInYears >= 18, "User must be at least 18 years old");
   }
 
   @Test
