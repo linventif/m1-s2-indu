@@ -12,7 +12,6 @@ class UtilisateurTest {
   private final String FIRST_NAME = "John";
   private final Integer CORRECT_QUANTITY = 3;
   private final Date BIRTHDAY = Date.valueOf("2000-01-01");
-  private final Wallet WALLET = new Wallet();
 
   public Utilisateur getCorrectUtilisateur() {
     return new Utilisateur(FIRST_NAME, NAME, BIRTHDAY);

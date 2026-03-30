@@ -3,7 +3,6 @@ package fr.utc.miage.wallet;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Utilisateur {
   private final String name;
