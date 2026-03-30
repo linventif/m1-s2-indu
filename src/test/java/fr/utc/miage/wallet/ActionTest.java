@@ -24,7 +24,7 @@ class ActionTest {
   void actionConstructorWithCategoryTest() {
     Action act = new Action("OVH", 10.0, ActionCategory.INDUSTRIAL);
     assertNotNull(act);
-    assertEquals("INDUSTRIAL", act.getCategory());
+    assertEquals(ActionCategory.INDUSTRIAL, act.getCategory());
   }
 
   @Test
