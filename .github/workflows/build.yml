@@ -1,4 +1,4 @@
-name: Build
+name: CI
 
 on:
   push:
@@ -7,8 +7,14 @@ on:
   pull_request:
 
 jobs:
-  build:
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     steps:
       - name: Checkout repository
@@ -29,12 +35,41 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
 
-      - name: Build and run Sonar analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Run all tests
+        run: mvn -B clean verify
+
+      - name: Generate coverage badge
+        id: coverage
+        run: ./.github/scripts/generate-coverage-badge.sh
+
+      - name: Add coverage summary
+        run: echo "JaCoCo coverage: ${{ steps.coverage.outputs.percentage }}%" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            target/site/jacoco
+            .github/badges/jacoco.svg
+
+      - name: Update coverage badge on main
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          mvn -B verify sonar:sonar \
+          if git diff --quiet -- .github/badges/jacoco.svg; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges/jacoco.svg
+          git commit -m "chore: update coverage badge"
+          git push
+
+      - name: Run Sonar analysis
+        if: github.event_name == 'push' && env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != ''
+        run: |
+          mvn -B sonar:sonar \
             -Dsonar.projectKey=linventif_m1-s2-indu_AZzXDvGQXwM5IsPrSNyK \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.token=$SONAR_TOKEN
