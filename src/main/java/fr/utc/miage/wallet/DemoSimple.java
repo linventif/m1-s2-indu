@@ -5,26 +5,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Fournit une démonstration exécutable du fonctionnement principal du projet.
+ * Fournit une démonstration exécutable simple du projet.
  * <p>
- * Cette classe illustre la création d'actions simples et composées, la
- * gestion de l'historique des prix, l'utilisation directe d'un portefeuille et
- * les opérations d'achat et de vente réalisées par un utilisateur.
+ * Cette classe reprend le scénario principal de démonstration pour disposer
+ * d'un second point d'entrée facilement réutilisable.
  */
 @SuppressWarnings({ "java:S106", "java:S1192" })
-public final class Demo {
+public final class DemoSimple {
   /** Empêche l'instanciation de cette classe utilitaire. */
-  private Demo() {}
+  private DemoSimple() {}
 
   /**
-   * Point d'entrée de la démonstration.
+   * Point d'entrée de la démonstration simple.
    *
    * @param args arguments de ligne de commande non utilisés
    */
   public static void main(final String[] args) {
     System.out.println();
     System.out.println("========================================");
-    System.out.println("DEMONSTRATION COMPLETE WALLET");
+    System.out.println("DEMONSTRATION SIMPLE WALLET");
     System.out.println("========================================");
 
     Action actionOvh = new Action("OVH Demo", 10.0, ActionCategory.INDUSTRIAL);
@@ -75,6 +74,8 @@ public final class Demo {
         + actionOvh.getPriceAtDate(Date.valueOf("2026-01-04")));
     System.out.println("Historique OVH sous forme textuelle : ");
     System.out.println(actionOvh.getHistoricalPricesString());
+    System.out.println("Courbe OVH basee sur l'historique CSV :");
+    System.out.println(actionOvh.getHistoricalPriceCurveString());
     System.out.println("Analyse OVH :");
     actionOvh.getActionAnalyse();
 

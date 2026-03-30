@@ -5,9 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
 
 /**
  * Représente une action financière manipulée par l'application.
@@ -37,6 +40,7 @@ public class Action {
   private ActionCategory category;
   private Map<String, Float> composition;
   private Map<Date, Double> historicalPrices;
+  private static final int CHART_HEIGHT = 10;
 
   /**
    * Crée une action simple dans la catégorie {@link ActionCategory#OTHER}.
@@ -170,9 +174,9 @@ public class Action {
    * l'évolution entre deux mesures successives.
    */
   public void getActionAnalyse() {
-    // Trier par date pour une analyse plus lisible
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     final String SEPARATEUR = "+------------+---------+------------+";
+    List<Map.Entry<Date, Double>> sortedEntries = getSortedHistoricalEntries();
 
     System.out.println(SEPARATEUR);
     System.out.println("| Date       | Valeur  | Evolution  |");
@@ -180,7 +184,7 @@ public class Action {
 
     Double previousValue = null;
 
-    for (Map.Entry<Date, Double> entry : this.historicalPrices.entrySet()) {
+    for (Map.Entry<Date, Double> entry : sortedEntries) {
       Double currentValue = entry.getValue();
 
       String evolution;
@@ -211,6 +215,44 @@ public class Action {
     System.out.println("Maximum           : " + stats.getMax());
     System.out.println("Moyenne           : " + stats.getAverage());
     System.out.println("Somme             : " + stats.getSum());
+  }
+
+  /**
+   * Retourne une courbe ASCII représentant l'évolution du prix dans le temps.
+   * <p>
+   * Les valeurs sont triées par date avant le tracé. Si aucun historique n'est
+   * disponible, la méthode retourne {@code null}.
+   *
+   * @return une représentation textuelle de la courbe, ou {@code null} si
+   *         aucun historique n'est enregistré
+   */
+  public String getHistoricalPriceCurveString() {
+    List<Map.Entry<Date, Double>> sortedEntries = getSortedHistoricalEntries();
+    if (sortedEntries.isEmpty()) {
+      return null;
+    }
+
+    int width = sortedEntries.size() * 3 - 2;
+    char[][] grid = createEmptyGrid(CHART_HEIGHT, width);
+    double min = sortedEntries.stream().mapToDouble(Map.Entry::getValue).min().orElse(price);
+    double max = sortedEntries.stream().mapToDouble(Map.Entry::getValue).max().orElse(price);
+
+    int[] xPoints = new int[sortedEntries.size()];
+    int[] yPoints = new int[sortedEntries.size()];
+
+    for (int i = 0; i < sortedEntries.size(); i++) {
+      xPoints[i] = i * 3;
+      yPoints[i] = mapValueToRow(sortedEntries.get(i).getValue(), min, max, CHART_HEIGHT);
+      grid[yPoints[i]][xPoints[i]] = '*';
+    }
+
+    for (int i = 0; i < sortedEntries.size() - 1; i++) {
+      drawSegment(grid, xPoints[i], yPoints[i], xPoints[i + 1], yPoints[i + 1]);
+      grid[yPoints[i]][xPoints[i]] = '*';
+      grid[yPoints[i + 1]][xPoints[i + 1]] = '*';
+    }
+
+    return buildChartString(grid, sortedEntries, min, max);
   }
 
   /**
@@ -396,6 +438,78 @@ public class Action {
     sb.append("Action: ").append(label).append("\n").append(" Historical Prices: ");
     for (Map.Entry<Date, Double> entry : historicalPrices.entrySet()) {
       sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
+    }
+    return sb.toString();
+  }
+
+  private List<Map.Entry<Date, Double>> getSortedHistoricalEntries() {
+    List<Map.Entry<Date, Double>> sortedEntries = new ArrayList<>(historicalPrices.entrySet());
+    sortedEntries.sort(Comparator.comparing(Map.Entry::getKey));
+    return sortedEntries;
+  }
+
+  private static char[][] createEmptyGrid(final int height, final int width) {
+    char[][] grid = new char[height][width];
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
+        grid[row][col] = ' ';
+      }
+    }
+    return grid;
+  }
+
+  private static int mapValueToRow(final double value, final double min, final double max, final int height) {
+    if (Double.compare(min, max) == 0) {
+      return height / 2;
+    }
+    double normalized = (value - min) / (max - min);
+    return height - 1 - (int) Math.round(normalized * (height - 1));
+  }
+
+  private static void drawSegment(
+      final char[][] grid, final int x1, final int y1, final int x2, final int y2) {
+    int steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+    for (int step = 1; step < steps; step++) {
+      int x = x1 + (int) Math.round((x2 - x1) * (step / (double) steps));
+      int y = y1 + (int) Math.round((y2 - y1) * (step / (double) steps));
+      if (grid[y][x] == '*') {
+        continue;
+      }
+      grid[y][x] = getSegmentCharacter(x1, y1, x2, y2);
+    }
+  }
+
+  private static char getSegmentCharacter(final int x1, final int y1, final int x2, final int y2) {
+    if (y1 == y2) {
+      return '-';
+    }
+    if (x1 == x2) {
+      return '|';
+    }
+    return y2 < y1 ? '/' : '\\';
+  }
+
+  private static String buildChartString(
+      final char[][] grid,
+      final List<Map.Entry<Date, Double>> sortedEntries,
+      final double min,
+      final double max) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Courbe d'evolution du prix").append("\n");
+    for (int row = 0; row < grid.length; row++) {
+      double axisValue = max - ((max - min) * row / (grid.length - 1.0));
+      sb.append(String.format("%8.2f | ", axisValue));
+      sb.append(grid[row]);
+      sb.append("\n");
+    }
+    sb.append("         +");
+    for (int col = 0; col < grid[0].length + 2; col++) {
+      sb.append('-');
+    }
+    sb.append("\n");
+    sb.append("Dates    : ");
+    for (Map.Entry<Date, Double> entry : sortedEntries) {
+      sb.append(new SimpleDateFormat("dd/MM").format(entry.getKey())).append("   ");
     }
     return sb.toString();
   }
