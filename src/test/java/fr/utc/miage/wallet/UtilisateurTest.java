@@ -2,16 +2,18 @@ package fr.utc.miage.wallet;
 
 import java.sql.Date;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 class UtilisateurTest {
-  private final String NAME = "Doe";
-  private final String FIRST_NAME = "John";
-  private final Date BIRTHDAY = Date.valueOf("2000-01-01");
-  private final Wallet WALLET = new Wallet();
+  private static final String NAME = "Doe";
+  private static final String FIRST_NAME = "John";
+  private static final int CORRECT_QUANTITY = 3;
+  private static final Date BIRTHDAY = Date.valueOf("2000-01-01");
 
-  public Utilisateur getCorrectUtilisateur(){
+  public Utilisateur getCorrectUtilisateur() {
     return new Utilisateur(FIRST_NAME, NAME, BIRTHDAY);
   }
 
@@ -40,7 +42,7 @@ class UtilisateurTest {
   void testGetWallet() {
     Utilisateur utilisateur = getCorrectUtilisateur();
     Wallet result = utilisateur.getWallet();
-    assertEquals(WALLET, result);
+    assertEquals(new Wallet(), result);
   }
 
   @Test
@@ -49,6 +51,32 @@ class UtilisateurTest {
     Wallet newWallet = new Wallet();
     utilisateur.setWallet(newWallet);
     assertEquals(newWallet, utilisateur.getWallet());
+  }
+
+  @Test
+  void testBuyActionNullShouldNotWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    assertThrows(IllegalArgumentException.class, () -> {
+      utilisateur.buyAction(null, CORRECT_QUANTITY);
+    });
+  }
+
+  @Test
+  void testBuyActionQuantityNullShouldNotWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    assertThrows(IllegalArgumentException.class, () -> {
+      utilisateur.buyAction(action, null);
+    });
+  }
+
+  @Test
+  void testBuyActionShouldNWork() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    assertDoesNotThrow(() -> {
+      utilisateur.buyAction(action, CORRECT_QUANTITY);
+    });
   }
 
 }

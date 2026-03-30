@@ -51,4 +51,14 @@ public class Utilisateur {
   public void setActionList(final List<Action> actionList) {
     this.actionList = actionList;
   }
+
+  public void buyAction(final Action action, final Integer quantity) {
+    if (action == null || quantity == null)
+      throw new IllegalArgumentException("action ou quantity can not be null");
+    if (action.getPrice() * quantity <= this.cashAmout) {
+      this.cashAmout -= action.getPrice() * quantity;
+      this.getWallet().addAction(action, quantity);
+    }
+
+  }
 }
