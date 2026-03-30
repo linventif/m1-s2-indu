@@ -157,4 +157,38 @@ class ActionTest {
     industrialAction.delete();
     otherAction.delete();
   }
+
+  @Test
+ void getHistoricalPricesStringEmptyTest() {
+   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+   String expected = null;
+   assertEquals(expected, act.getHistoricalPricesString());
+ }
+
+
+ @Test
+ void getHistoricalPricesStringSingleEntryTest() {
+   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+   Date date = Date.valueOf("2023-01-01");
+   act.addHistoricalPrice(date, 123.45);
+   String result = act.getHistoricalPricesString();
+   assertTrue(result.contains("Action: " + CORRECT_LABEL));
+   assertTrue(result.contains("Historical Prices:"));
+   assertTrue(result.contains(date.toString() + ": 123.45€"));
+ }
+
+
+ @Test
+ void getHistoricalPricesStringMultipleEntriesTest() {
+   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+   Date date1 = Date.valueOf("2023-01-01");
+   Date date2 = Date.valueOf("2023-01-02");
+   act.addHistoricalPrice(date1, 100.0);
+   act.addHistoricalPrice(date2, 200.0);
+   String result = act.getHistoricalPricesString();
+   assertTrue(result.contains(date1.toString() + ": 100.0€"));
+   assertTrue(result.contains(date2.toString() + ": 200.0€"));
+   assertTrue(result.startsWith("Action: " + CORRECT_LABEL));
+ }
+
 }

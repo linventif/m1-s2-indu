@@ -132,6 +132,24 @@ public class Action {
     return "Action: " + label + " (" + price + "€)" + " Composition " + composition;
   }
 
+  /**
+  * Returns a string representation of the historical prices.
+  *
+  * @return a string containing the historical prices or null if there are no historical prices
+  */
+ public String getHistoricalPricesString() {
+   StringBuilder sb = new StringBuilder();
+   if (historicalPrices.isEmpty()) {
+     return null;
+   }
+   sb.append("Action: ").append(label).append("\n").append(" Historical Prices: ");
+   for (Map.Entry<Date, Double> entry : historicalPrices.entrySet()) {
+     sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
+   }
+   return sb.toString();
+  
+ }
+
   @Override
   public int hashCode() {
     final int prime = 31;
