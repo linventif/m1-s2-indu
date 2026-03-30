@@ -4,8 +4,23 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Fournit une démonstration exécutable du fonctionnement principal du projet.
+ * <p>
+ * Cette classe illustre la création d'actions simples et composées, la
+ * création d'un utilisateur, l'achat d'actions, puis la vente d'une action
+ * déjà détenue.
+ */
 @SuppressWarnings({ "java:S106", "java:S1192" })
 public final class Demo {
+  /** Empêche l'instanciation de cette classe utilitaire. */
+  private Demo() {}
+
+  /**
+   * Point d'entrée de la démonstration.
+   *
+   * @param args arguments de ligne de commande non utilisés
+   */
   public static void main(final String[] args) {
     Action actionOvh = new Action("OVH Demo", 10.0, ActionCategory.INDUSTRIAL);
     Action actionGoogle = new Action("Google Demo", 20.0, ActionCategory.OTHER);
