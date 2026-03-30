@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
@@ -28,6 +27,7 @@ class ActionTest {
   private static final String VALID_CSV = "src/test/resources/prices_valid.csv";
   private static final String MALFORMED_CSV = "src/test/resources/prices_malformed.csv";
   private static final String EMPTY_CSV = "src/test/resources/only_header.csv";
+  private static final String INVALID_HEADER_CSV = "src/test/resources/invalid_header.csv";
   private static final String NON_EXISTENT_CSV = "src/test/resources/ghost.csv";
 
   public static Action getCorrectAction() {
@@ -369,6 +369,15 @@ class ActionTest {
     Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
     act.importHistoricalPrices(EMPTY_CSV);
     assertEquals(0, act.getHistoricalPrices().size());
+  }
+
+  /**
+    * Test the csv import of historical prices with a non-existent file.
+    */
+  @Test
+  void testImportInvalidHeaderCsv() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    assertThrows(IllegalArgumentException.class, () -> act.importHistoricalPrices(INVALID_HEADER_CSV));
   }
 
   /**

@@ -246,17 +246,14 @@ public class Action {
   public void importHistoricalPrices(String csvFilePath) {
     try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
         String line;
-        br.readLine(); // Skip header line
+        String headerLine = br.readLine(); 
+        if (headerLine == null || !headerLine.trim().equals("date,price")) {
+            throw new IllegalArgumentException("Invalid CSV header");
+        }
         while ((line = br.readLine()) != null) {
             String[] values = line.split(",");
             if (values.length == 2) {
-                try {
-                    Date date = Date.valueOf(values[0].trim());
-                    double priceValue = Double.parseDouble(values[1].trim());
-                    addHistoricalPrice(date, priceValue);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
+                processHistoricalPriceLine(values);
             }
         }
     } catch (IOException e) {
@@ -265,11 +262,20 @@ public class Action {
   } 
 
   /**
-  * Get the price of the action at a specific date.
-  *
-  * @param date the date for which to get the price
-  * @return the price of the action at the given date or the default price if no historical price is found for that date
-  */
+   * Processes a line from the historical prices CSV file.
+   *
+   * @param values the array containing date and price as strings
+   */
+  private void processHistoricalPriceLine(String[] values) {
+    try {
+        Date date = Date.valueOf(values[0].trim());
+        double priceValue = Double.parseDouble(values[1].trim());
+        addHistoricalPrice(date, priceValue);
+    } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+    }
+  }
+
   public double getPriceAtDate(Date date) {
     if (historicalPrices != null) {
       Double historicalPrice = historicalPrices.get(date);
