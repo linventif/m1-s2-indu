@@ -28,8 +28,8 @@ public class Utilisateur {
    * Crée un nouvel utilisateur avec un portefeuille vide et un solde initial.
    *
    * @param firstName le prénom de l'utilisateur
-   * @param name le nom de l'utilisateur
-   * @param birthday la date de naissance de l'utilisateur
+   * @param name      le nom de l'utilisateur
+   * @param birthday  la date de naissance de l'utilisateur
    */
   public Utilisateur(final String firstName, final String name, final Date birthday) {
     this.firstName = firstName;
@@ -96,7 +96,7 @@ public class Utilisateur {
     }
 
     this.cashAmount += amount;
-    historiMouvementSold.add("Ajout d'argent:" + amount +" Current sold :" + this.cashAmount );
+    historiMouvementSold.add("Ajout d'argent:" + amount + " Current sold :" + this.cashAmount);
   }
 
   /**
@@ -112,7 +112,7 @@ public class Utilisateur {
    * Achète une quantité d'une action si l'utilisateur dispose de suffisamment
    * de liquidités.
    *
-   * @param action l'action à acheter
+   * @param action   l'action à acheter
    * @param quantity la quantité à acheter
    * @throws IllegalArgumentException si l'action ou la quantité est nulle
    */
@@ -120,14 +120,14 @@ public class Utilisateur {
     if (this.iBelieveICanBuy(action, quantity)) {
       this.cashAmount -= action.getPrice() * quantity;
       this.getWallet().addAction(action, quantity);
-      historiMouvementSold.add("Action acheté :" + action.toString() +" Current sold :"+ this.cashAmount);
+      historiMouvementSold.add("Action acheté :" + action.toString() + " Current sold :" + this.cashAmount);
     }
   }
 
   /**
    * Vérifie si l'utilisateur peut acheter une quantité donnée d'une action.
    *
-   * @param action l'action à évaluer
+   * @param action   l'action à évaluer
    * @param quantity la quantité souhaitée
    * @return {@code true} si le montant disponible couvre l'achat,
    *         {@code false} sinon
@@ -144,11 +144,12 @@ public class Utilisateur {
    * Vend une quantité d'une action présente dans le portefeuille de
    * l'utilisateur.
    *
-   * @param action l'action à vendre
+   * @param action   l'action à vendre
    * @param quantity la quantité à vendre
    * @throws IllegalArgumentException si l'action ou la quantité est nulle, si
-   *         la quantité n'est pas strictement positive ou si le portefeuille ne
-   *         contient pas assez d'actions
+   *                                  la quantité n'est pas strictement positive
+   *                                  ou si le portefeuille ne
+   *                                  contient pas assez d'actions
    */
   public void sellAction(final Action action, final Integer quantity) {
     if (action == null || quantity == null) {
@@ -160,7 +161,7 @@ public class Utilisateur {
 
     this.getWallet().removeAction(action, quantity);
     this.cashAmount += action.getPrice() * quantity;
-    historiMouvementSold.add("Action sold :" + action.toString() +" Current sold :"+ this.cashAmount);
+    historiMouvementSold.add("Action sold :" + action.toString() + " Current sold :" + this.cashAmount);
   }
 
   /**

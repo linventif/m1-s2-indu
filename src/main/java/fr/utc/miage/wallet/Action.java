@@ -55,11 +55,11 @@ public class Action {
   /**
    * Crée une action simple avec une catégorie explicite.
    *
-   * @param label le libellé unique de l'action
-   * @param price le prix courant de l'action
+   * @param label    le libellé unique de l'action
+   * @param price    le prix courant de l'action
    * @param category la catégorie de l'action
    * @throws IllegalArgumentException si le libellé est vide ou nul, ou si le
-   *         prix est nul ou négatif
+   *                                  prix est nul ou négatif
    */
   public Action(final String label, final Double price, final ActionCategory category) {
     validate(label, price);
@@ -75,12 +75,12 @@ public class Action {
   /**
    * Crée une action composée à partir d'une composition de sous-actions.
    *
-   * @param label le libellé unique de l'action
-   * @param price le prix courant de l'action
+   * @param label       le libellé unique de l'action
+   * @param price       le prix courant de l'action
    * @param composition la composition de l'action, exprimée sous forme de
-   *        pondérations par libellé
+   *                    pondérations par libellé
    * @throws IllegalArgumentException si le libellé est vide ou nul, ou si le
-   *         prix est nul ou négatif
+   *                                  prix est nul ou négatif
    */
   public Action(final String label, final Double price, final Map<String, Float> composition) {
     validate(label, price);
@@ -109,7 +109,7 @@ public class Action {
    * @param label le libellé à valider
    * @param price le prix à valider
    * @throws IllegalArgumentException si le libellé est vide ou nul, ou si le
-   *         prix est nul ou négatif
+   *                                  prix est nul ou négatif
    */
   private static void validate(final String label, final Double price) {
     if (label == null || label.isEmpty()) {
@@ -261,7 +261,7 @@ public class Action {
    * @param date la date recherchée
    * @return le prix enregistré à cette date
    * @throws IllegalArgumentException si aucun prix n'est disponible pour cette
-   *         date
+   *                                  date
    */
   public Double getHistoricalPrice(final Date date) {
     if (this.historicalPrices.containsKey(date)) {
@@ -330,10 +330,10 @@ public class Action {
   /**
    * Ajoute un prix historique pour une date donnée.
    *
-   * @param date la date associée au prix
+   * @param date  la date associée au prix
    * @param price le prix historique à enregistrer
    * @throws IllegalArgumentException si le prix est négatif ou si la date est
-   *         nulle
+   *                                  nulle
    */
   public void addHistoricalPrice(final Date date, final double price) {
     if (price < 0) {
@@ -353,7 +353,7 @@ public class Action {
    *
    * @param csvFilePath le chemin du fichier CSV à lire
    * @throws IllegalArgumentException si l'en-tête du fichier est invalide
-   * @throws IllegalStateException si une erreur de lecture survient
+   * @throws IllegalStateException    si une erreur de lecture survient
    */
   public void importHistoricalPrices(final String csvFilePath) {
     try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
