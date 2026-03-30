@@ -12,6 +12,7 @@ class UtilisateurTest {
   private final String NAME = "Doe";
   private final String FIRST_NAME = "John";
   private final Integer CORRECT_QUANTITY = 3;
+  private final Integer OTHER_QUANTITY = 21;
   private final Date BIRTHDAY = Date.valueOf("2000-01-01");
   private final Wallet WALLET = new Wallet();
 
@@ -231,6 +232,14 @@ class UtilisateurTest {
     assertEquals(ch,"Action sold :" + action.toString() +" Current sold :"+ utilisateur.getCashAmount());
   }
 
+  @Test
+  void testByActionWithActionPrixXQuantityInfAmoutShouldNotWork(){
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+    assertThrows(IllegalArgumentException.class, () -> {
+      utilisateur.buyAction(action, OTHER_QUANTITY);
+    });
+  }
 
 
 
