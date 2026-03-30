@@ -1,6 +1,8 @@
 package fr.utc.miage.wallet;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -9,9 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.sql.Date;
-import java.util.HashMap;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -102,7 +101,8 @@ class ActionTest {
 
     assertEquals(ActionCategory.FOOD, act.getCategory());
     assertEquals(composition, act.getComposition());
-    assertEquals("Action: Action With Composition (" + CORRECT_PRICE + "€) Composition " + composition, act.toStringC());
+    assertEquals("Action: Action With Composition (" + CORRECT_PRICE + "€) Composition " + composition,
+        act.toStringC());
   }
 
   @Test
@@ -240,7 +240,8 @@ class ActionTest {
   }
 
   /**
-   * addHistoricalPrices should throw an exception if the price is negative or if the date is null.
+   * addHistoricalPrices should throw an exception if the price is negative or if
+   * the date is null.
    */
   @Test
   void addHistoricalPricesInvalidInputTest() {
@@ -252,7 +253,7 @@ class ActionTest {
       act.addHistoricalPrice(Date.valueOf("2023-01-01"), -100.0);
     }, "Price cannot be negative");
   }
-  
+
   /**
    * Test the retrieval of historical prices.
    */
@@ -265,7 +266,7 @@ class ActionTest {
     assertEquals(2, historicalPrices.size());
     assertEquals(100.0, historicalPrices.get(Date.valueOf("2023-01-01")));
     assertEquals(101.0, historicalPrices.get(Date.valueOf("2023-01-02")));
-  } 
+  }
 
   @Test
   void getActionsByCategoryTest() {
@@ -295,36 +296,65 @@ class ActionTest {
   }
 
   @Test
- void getHistoricalPricesStringEmptyTest() {
-   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-   String expected = null;
-   assertEquals(expected, act.getHistoricalPricesString());
- }
+  void getHistoricalPricesStringEmptyTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    String expected = null;
+    assertEquals(expected, act.getHistoricalPricesString());
+  }
 
+  @Test
+  void getHistoricalPricesStringSingleEntryTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Date date = Date.valueOf("2023-01-01");
+    act.addHistoricalPrice(date, 123.45);
+    String result = act.getHistoricalPricesString();
+    assertTrue(result.contains("Action: " + CORRECT_LABEL));
+    assertTrue(result.contains("Historical Prices:"));
+    assertTrue(result.contains(date.toString() + ": 123.45€"));
+  }
 
- @Test
- void getHistoricalPricesStringSingleEntryTest() {
-   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-   Date date = Date.valueOf("2023-01-01");
-   act.addHistoricalPrice(date, 123.45);
-   String result = act.getHistoricalPricesString();
-   assertTrue(result.contains("Action: " + CORRECT_LABEL));
-   assertTrue(result.contains("Historical Prices:"));
-   assertTrue(result.contains(date.toString() + ": 123.45€"));
- }
+  @Test
+  void testGetHistoricalPricesStringMultipleEntriesTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    Date date1 = Date.valueOf("2023-01-01");
+    Date date2 = Date.valueOf("2023-01-02");
+    act.addHistoricalPrice(date1, 100.0);
+    act.addHistoricalPrice(date2, 200.0);
+    String result = act.getHistoricalPricesString();
+    assertTrue(result.contains(date1.toString() + ": 100.0€"));
+    assertTrue(result.contains(date2.toString() + ": 200.0€"));
+    assertTrue(result.startsWith("Action: " + CORRECT_LABEL));
+  }
 
+  @Test
+  void testGetHistoricalPriceDateNullShouldNotWork() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    assertThrows(IllegalArgumentException.class,
+        () -> {
+          act.getHistoricalPrice(null);
+        });
+  }
 
- @Test
- void getHistoricalPricesStringMultipleEntriesTest() {
-   Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
-   Date date1 = Date.valueOf("2023-01-01");
-   Date date2 = Date.valueOf("2023-01-02");
-   act.addHistoricalPrice(date1, 100.0);
-   act.addHistoricalPrice(date2, 200.0);
-   String result = act.getHistoricalPricesString();
-   assertTrue(result.contains(date1.toString() + ": 100.0€"));
-   assertTrue(result.contains(date2.toString() + ": 200.0€"));
-   assertTrue(result.startsWith("Action: " + CORRECT_LABEL));
- }
+  @Test
+  void testGetHistoricalPriceDateShouldWork() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    assertDoesNotThrow(
+        () -> {
+          act.getHistoricalPrice(Date.valueOf("2023-01-01"));
+        });
+    assertEquals(act.getHistoricalPrice(Date.valueOf("2023-01-01")), 100.0);
+  }
+
+  @Test
+  void testGetActionAnalyse() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    act.addHistoricalPrice(Date.valueOf("2023-01-02"), 200.0);
+    assertDoesNotThrow(() -> {
+      act.getActionAnalyse();
+    });
+  }
 
 }

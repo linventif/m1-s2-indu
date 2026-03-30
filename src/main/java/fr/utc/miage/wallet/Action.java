@@ -1,5 +1,8 @@
 package fr.utc.miage.wallet;
+
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +45,7 @@ public class Action {
     this.type = TypeAction.COMPOSEE;
     this.category = ActionCategory.OTHER;
     this.composition = composition;
+    this.historicalPrices = new HashMap<>();
     ACTIONS.put(label, this);
   }
 
@@ -78,6 +82,56 @@ public class Action {
     return price;
   }
 
+  public void getActionAnalyse() {
+    // Trier par date pour une analyse plus lisible
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+    System.out.println("+------------+---------+------------+");
+    System.out.println("| Date       | Valeur  | Evolution  |");
+    System.out.println("+------------+---------+------------+");
+
+    Double previousValue = null;
+
+    for (Map.Entry<Date, Double> entry : this.historicalPrices.entrySet()) {
+      Double currentValue = entry.getValue();
+
+      String evolution;
+      if (previousValue == null) {
+        evolution = "N/A";
+      } else {
+        double percentChange = ((currentValue - previousValue) / previousValue) * 100;
+        evolution = String.format("%.2f%%", percentChange);
+      }
+
+      System.out.printf("| %-10s | %-7.2f | %-10s |\n",
+          sdf.format(entry.getKey()),
+          currentValue,
+          evolution);
+
+      previousValue = currentValue;
+    }
+
+    System.out.println("+------------+---------+------------+");
+
+    DoubleSummaryStatistics stats = this.historicalPrices.values()
+        .stream()
+        .mapToDouble(Double::doubleValue)
+        .summaryStatistics();
+
+    System.out.println("Nombre de valeurs : " + stats.getCount());
+    System.out.println("Minimum           : " + stats.getMin());
+    System.out.println("Maximum           : " + stats.getMax());
+    System.out.println("Moyenne           : " + stats.getAverage());
+    System.out.println("Somme             : " + stats.getSum());
+  }
+
+  public Double getHistoricalPrice(final Date date) {
+    if (this.historicalPrices.containsKey(date))
+      return this.historicalPrices.get(date);
+    else
+      throw new IllegalArgumentException();
+  }
+
   public void setPrice(final double price) {
     if (price < 0) {
       throw new IllegalArgumentException("Price cannot be negative");
@@ -105,13 +159,13 @@ public class Action {
     return historicalPrices;
   }
 
-
   /**
    * Adds a historical price for a specific date.
    * 
    * @param date
    * @param price
-   * @throws IllegalArgumentException if the price is negative or if the date is null
+   * @throws IllegalArgumentException if the price is negative or if the date is
+   *                                  null
    */
   public void addHistoricalPrice(Date date, double price) {
     if (price < 0) {
@@ -133,22 +187,23 @@ public class Action {
   }
 
   /**
-  * Returns a string representation of the historical prices.
-  *
-  * @return a string containing the historical prices or null if there are no historical prices
-  */
- public String getHistoricalPricesString() {
-   StringBuilder sb = new StringBuilder();
-   if (historicalPrices.isEmpty()) {
-     return null;
-   }
-   sb.append("Action: ").append(label).append("\n").append(" Historical Prices: ");
-   for (Map.Entry<Date, Double> entry : historicalPrices.entrySet()) {
-     sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
-   }
-   return sb.toString();
-  
- }
+   * Returns a string representation of the historical prices.
+   *
+   * @return a string containing the historical prices or null if there are no
+   *         historical prices
+   */
+  public String getHistoricalPricesString() {
+    StringBuilder sb = new StringBuilder();
+    if (historicalPrices.isEmpty()) {
+      return null;
+    }
+    sb.append("Action: ").append(label).append("\n").append(" Historical Prices: ");
+    for (Map.Entry<Date, Double> entry : historicalPrices.entrySet()) {
+      sb.append("\n").append(entry.getKey()).append(": ").append(entry.getValue()).append("€");
+    }
+    return sb.toString();
+
+  }
 
   @Override
   public int hashCode() {
