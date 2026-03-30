@@ -122,7 +122,6 @@ public class Utilisateur {
       this.getWallet().addAction(action, quantity);
       historiMouvementSold.add("Action acheté :" + action.toString() +" Current sold :"+ this.cashAmount);
     }
-    else{throw new IllegalArgumentException("action * quantity should be <= this.cashAmount");}
   }
 
   /**
@@ -161,4 +160,9 @@ public class Utilisateur {
 
     this.getWallet().removeAction(action, quantity);
     this.cashAmount += action.getPrice() * quantity;
-  }}
+    historiMouvementSold.add("Action sold :" + action.toString() +" Current sold :"+ this.cashAmount);
+  }
+   public List<String> getHistoriqueMouvementSold(){
+    return this.historiMouvementSold;
+  }
+}
