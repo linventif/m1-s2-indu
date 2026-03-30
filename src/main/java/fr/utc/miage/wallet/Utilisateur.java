@@ -63,4 +63,16 @@ public class Utilisateur {
       throw new IllegalArgumentException("action ou quantity can not be null");
     return action.getPrice() * quantity <= this.cashAmount;
   }
+  
+  public void sellAction(final Action action, final Integer quantity) {
+    if (action == null || quantity == null) {
+      throw new IllegalArgumentException("action ou quantity can not be null");
+    }
+    if (quantity <= 0) {
+      throw new IllegalArgumentException("quantity must be positive");
+    }
+
+    this.getWallet().removeAction(action, quantity);
+    this.cashAmount += action.getPrice() * quantity;
+  }
 }

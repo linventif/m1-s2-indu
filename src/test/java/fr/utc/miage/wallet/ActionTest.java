@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.sql.Date;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -92,13 +95,41 @@ class ActionTest {
     assertEquals(act1.getPrice(), act2.getPrice());
   }
 
-  // hascode test
+  // hashCode test
   @Test
   void actionHashCodeTest() {
     Action act1 = new Action(CORRECT_LABEL, CORRECT_PRICE);
     Action act2 = new Action(CORRECT_LABEL, CORRECT_PRICE);
     assertEquals(act1.hashCode(), act2.hashCode());
   }
+
+  /**
+   * addHistoricalPrices should throw an exception if the price is negative or if the date is null.
+   */
+  @Test
+  void addHistoricalPricesInvalidInputTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    assertThrows(IllegalArgumentException.class, () -> {
+      act.addHistoricalPrice(null, 100.0);
+    }, "Date cannot be null");
+    assertThrows(IllegalArgumentException.class, () -> {
+      act.addHistoricalPrice(Date.valueOf("2023-01-01"), -100.0);
+    }, "Price cannot be negative");
+  }
+  
+  /**
+   * Test the retrieval of historical prices.
+   */
+  @Test
+  void getHistoricalPricesTest() {
+    Action act = new Action(CORRECT_LABEL, CORRECT_PRICE);
+    act.addHistoricalPrice(Date.valueOf("2023-01-01"), 100.0);
+    act.addHistoricalPrice(Date.valueOf("2023-01-02"), 101.0);
+    Map<Date, Double> historicalPrices = act.getHistoricalPrices();
+    assertEquals(2, historicalPrices.size());
+    assertEquals(100.0, historicalPrices.get(Date.valueOf("2023-01-01")));
+    assertEquals(101.0, historicalPrices.get(Date.valueOf("2023-01-02")));
+  } 
 
   @Test
   void getActionsByCategoryTest() {

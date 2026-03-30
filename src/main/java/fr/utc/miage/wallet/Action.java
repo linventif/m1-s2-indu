@@ -1,5 +1,5 @@
 package fr.utc.miage.wallet;
-
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +18,8 @@ public class Action {
   private ActionCategory category;
   private Map<String, Float> composition;
 
+  private Map<Date, Double> historicalPrices;
+
   public Action(final String label, final Double price) {
     this(label, price, ActionCategory.OTHER);
   }
@@ -29,6 +31,7 @@ public class Action {
     this.type = TypeAction.SIMPLE;
     this.category = category;
     this.composition = null;
+    this.historicalPrices = new HashMap<>();
     ACTIONS.put(label, this);
   }
 
@@ -96,6 +99,28 @@ public class Action {
 
   public void delete() {
     ACTIONS.remove(label);
+  }
+
+  public Map<Date, Double> getHistoricalPrices() {
+    return historicalPrices;
+  }
+
+
+  /**
+   * Adds a historical price for a specific date.
+   * 
+   * @param date
+   * @param price
+   * @throws IllegalArgumentException if the price is negative or if the date is null
+   */
+  public void addHistoricalPrice(Date date, double price) {
+    if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative");
+    }
+    if (date == null) {
+      throw new IllegalArgumentException("Date cannot be null");
+    }
+    this.historicalPrices.put(date, price);
   }
 
   @Override
