@@ -1,22 +1,29 @@
 package fr.utc.miage.wallet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.Date;
-import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 class ActionTest {
 
-  private final String CORRECT_LABEL = "OVH";
-  private final String OTHER_CORRECT_LABEL = "Google";
-  private final Double CORRECT_PRICE = 10.0;
-  private final Double OTHER_CORRECT_PRICE = 15.0;
+  private static final String CORRECT_LABEL = "OVH";
+  private static final String OTHER_CORRECT_LABEL = "Google";
+  private static final Double CORRECT_PRICE = 10.0;
+  private static final Double OTHER_CORRECT_PRICE = 15.0;
+
+  public static Action getCorrectAction() {
+    return new Action(CORRECT_LABEL, CORRECT_PRICE);
+  }
 
   @Test
   void actionConstructorTest() {
@@ -124,4 +131,30 @@ class ActionTest {
     assertEquals(101.0, historicalPrices.get(Date.valueOf("2023-01-02")));
   } 
 
+  @Test
+  void getActionsByCategoryTest() {
+    final String industrialLabel = "Industrial Test Action";
+    final String otherLabel = "Other Test Action";
+
+    Action existingIndustrial = Action.getActionByLabel(industrialLabel);
+    if (existingIndustrial != null) {
+      existingIndustrial.delete();
+    }
+    Action existingOther = Action.getActionByLabel(otherLabel);
+    if (existingOther != null) {
+      existingOther.delete();
+    }
+
+    Action industrialAction = new Action(industrialLabel, CORRECT_PRICE, ActionCategory.INDUSTRIAL);
+    Action otherAction = new Action(otherLabel, CORRECT_PRICE, ActionCategory.OTHER);
+
+    Map<String, Action> industrialActions = Action.getActionsByCategory(ActionCategory.INDUSTRIAL);
+
+    assertTrue(industrialActions.containsKey(industrialLabel));
+    assertEquals(ActionCategory.INDUSTRIAL, industrialActions.get(industrialLabel).getCategory());
+    assertFalse(industrialActions.containsKey(otherLabel));
+
+    industrialAction.delete();
+    otherAction.delete();
+  }
 }
