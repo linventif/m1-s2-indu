@@ -77,6 +77,47 @@ class UtilisateurTest {
     assertDoesNotThrow(() -> {
       utilisateur.buyAction(action, CORRECT_QUANTITY);
     });
+  void testGetCashAmount() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double result = utilisateur.getCashAmount();
+    Double expected = Utilisateur.INITIAL_CASH_AMOUNT;
+    assertEquals(expected, result, 0.001);
+  }
+
+  @Test
+  void testAddCashAmount100euro() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double initialAmount = utilisateur.getCashAmount();
+    Double amountToAdd = 100.00;
+    utilisateur.addCashAmount(amountToAdd);
+    Double result = utilisateur.getCashAmount();
+    Double expected = initialAmount + amountToAdd;
+    assertEquals(expected, result, 0.001);
+  }
+
+  @Test
+  void testAddCashAmount1cent() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double initialAmount = utilisateur.getCashAmount();
+    Double amountToAdd = 0.01;
+    utilisateur.addCashAmount(amountToAdd);
+    Double result = utilisateur.getCashAmount();
+    Double expected = initialAmount + amountToAdd;
+    assertEquals(expected, result, 0.001);
+  }
+
+  @Test
+  void testAddCashAmount0euro() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double amountToAdd = 0.00;
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.addCashAmount(amountToAdd));
+  }
+
+  @Test
+  void testAddCashAmountNegative100euro() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Double amountToAdd = -100.00;
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.addCashAmount(amountToAdd));
   }
 
 }
