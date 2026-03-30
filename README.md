@@ -1,6 +1,6 @@
 # m1-s2-indu
 
-[![CI](https://github.com/linventif/m1-s2-indu/actions/workflows/build.yml/badge.svg)](https://github.com/linventif/m1-s2-indu/actions/workflows/build.yml)
+[![CI](https://github.com/linventif/m1-s2-indu/actions/workflows/sonar.yml/badge.svg)](https://github.com/linventif/m1-s2-indu/actions/workflows/sonar.yml)
 ![Coverage](.github/badges/jacoco.svg)
 
 ## Links
@@ -23,3 +23,12 @@
 - JAVA doc
 - License
 - ...
+
+## Ordre du commit
+
+- dans une nouvelle branche
+- on fait autant de commit que l'on souhaite "commit"
+- on pull de ma branche
+- push dans ma branche
+- pull request dans le main
+- pas de merge sauf avec consentement !! 

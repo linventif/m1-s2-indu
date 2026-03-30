@@ -64,8 +64,8 @@ public class Action {
     return label;
   }
 
-  public String getCategory() {
-    return category.toString();
+  public ActionCategory getCategory() {
+    return category;
   }
 
   public void setCategory(final ActionCategory category) {
