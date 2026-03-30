@@ -4,6 +4,8 @@ import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
@@ -77,6 +79,49 @@ class UtilisateurTest {
     assertDoesNotThrow(() -> {
       utilisateur.buyAction(action, CORRECT_QUANTITY);
     });
+  }
+
+  @Test
+  void testIBelieveICanBuyShouldReturnTrue() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+
+    assertTrue(utilisateur.iBelieveICanBuy(action, CORRECT_QUANTITY));
+  }
+
+  @Test
+  void testIBelieveICanBuyShouldReturnFalseWhenCashIsInsufficient() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action expensiveAction = new Action("Expensive Action", 500.0);
+
+    assertFalse(utilisateur.iBelieveICanBuy(expensiveAction, 1));
+  }
+
+  @Test
+  void testIBelieveICanBuyActionNullShouldThrow() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.iBelieveICanBuy(null, CORRECT_QUANTITY));
+  }
+
+  @Test
+  void testIBelieveICanBuyQuantityNullShouldThrow() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action action = ActionTest.getCorrectAction();
+
+    assertThrows(IllegalArgumentException.class, () -> utilisateur.iBelieveICanBuy(action, null));
+  }
+
+  @Test
+  void testBuyActionShouldNotChangeWalletOrCashWhenCashIsInsufficient() {
+    Utilisateur utilisateur = getCorrectUtilisateur();
+    Action expensiveAction = new Action("Too expensive", 500.0);
+    Double initialCashAmount = utilisateur.getCashAmount();
+
+    utilisateur.buyAction(expensiveAction, 1);
+
+    assertEquals(initialCashAmount, utilisateur.getCashAmount(), 0.001);
+    assertFalse(utilisateur.getWallet().getActions().containsKey(expensiveAction));
   }
 
   @Test
