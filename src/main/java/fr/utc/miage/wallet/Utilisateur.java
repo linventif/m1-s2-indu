@@ -75,4 +75,10 @@ public class Utilisateur {
 
     this.getWallet().removeAction(action, quantity);
     this.cashAmount += action.getPrice() * quantity;
-  }}
+  }
+
+  public List<String> getHistoriqueMouvementSold(){
+    return this.historiMouvementSold;
+  }
+
+}
